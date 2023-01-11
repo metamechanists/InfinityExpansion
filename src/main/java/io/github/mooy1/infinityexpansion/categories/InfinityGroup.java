@@ -169,14 +169,13 @@ public final class InfinityGroup extends FlexItemGroup {
         menu.addItem(1, new CustomItemStack(ChestMenuUtils.getBackButton(player, "", ChatColor.GRAY + Slimefun.getLocalization().getMessage(player, "guide.back.guide"))));
         final List<Pair<SlimefunItemStack, ItemStack[]>> allItems = new ArrayList<>(ITEMS.values());
         final int itemCount = allItems.size();
-        final int totalPages = (int) Math.ceil(itemCount / (double) PAGE_SIZE);
         final int start = (page - 1) * PAGE_SIZE;
         final int end = Math.min(start + PAGE_SIZE, itemCount);
         final List<Pair<SlimefunItemStack, ItemStack[]>> pageItems = allItems.subList(start, end);
         for (int i = 0; i < 36; i++) {
             final int slot = i + 9;
             
-            if (i + 1 <= allItems.size()) {
+            if (i + 1 <= pageItems.size()) {
                 final Pair<SlimefunItemStack, ItemStack[]> item = pageItems.get(i);
                 final SlimefunItem sfItem = item.getFirstValue().getItem();
                 if (sfItem == null) {
