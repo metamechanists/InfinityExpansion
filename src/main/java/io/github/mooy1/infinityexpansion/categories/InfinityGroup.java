@@ -307,7 +307,7 @@ public final class InfinityGroup extends FlexItemGroup {
     }
     
     private static int getPageCount() {
-        return Math.ceil(ITEMS.values().size() / (double) PAGE_SIZE);
+        return (int) Math.ceil(ITEMS.values().size() / (double) PAGE_SIZE);
     }
 
     private static void moveRecipe(@Nonnull Player player, @Nonnull BlockMenu menu, Pair<SlimefunItemStack, ItemStack[]> pair, boolean max) {
