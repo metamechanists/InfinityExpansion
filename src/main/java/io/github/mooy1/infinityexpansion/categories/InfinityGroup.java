@@ -75,6 +75,7 @@ public final class InfinityGroup extends FlexItemGroup {
     private static final int BACK = 0;
     private static final int NEXT = 52;
     private static final int PREV = 45;
+    private static final int PAGE_SIZE = 36;
     private static final int INFINITY_BENCH = 8;
     private static final int[] WORKBENCH_BORDER = {
             7, 16, 17
@@ -166,35 +167,46 @@ public final class InfinityGroup extends FlexItemGroup {
         menu.addItem(53, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
 
         menu.addItem(1, new CustomItemStack(ChestMenuUtils.getBackButton(player, "", ChatColor.GRAY + Slimefun.getLocalization().getMessage(player, "guide.back.guide"))));
-        final List<Pair<SlimefunItemStack, ItemStack[]>> values = new ArrayList<>(ITEMS.values());
-        for (int i = 9; i < Math.min(44, (values.size() - (page - 1) * 36) + 8); i++) {
-            final Pair<SlimefunItemStack, ItemStack[]> item = values.get((i - 9) * page);
-            final SlimefunItem sfItem = item.getFirstValue().getItem();
-            if (sfItem == null) {
-                return;
-            }
+        final List<Pair<SlimefunItemStack, ItemStack[]>> allItems = new ArrayList<>(ITEMS.values());
+        final int itemCount = allItems.size();
+        final int totalPages = (int) Math.ceil(itemCount / (double) PAGE_SIZE);
+        final int start = (page - 1) * PAGE_SIZE;
+        final int end = Math.min(start + PAGE_SIZE, itemCount);
+        final List<Pair<SlimefunItemStack, ItemStack[]>> pageItems = allItems.subList(start, end);
+        for (int i = 0; i < 36; i++) {
+            final int slot = i + 9;
             
-            final Research research = sfItem.getResearch();
-            if (research != null && !entry.profile.hasUnlocked(research)) {
-                final ItemStack resItem = new CustomItemStack(
-                        ChestMenuUtils.getNotResearchedItem(),
-                        ChatColor.WHITE + ItemUtils.getItemName(sfItem.getItem()),
-                        "&4&l" + Slimefun.getLocalization().getMessage(player, "guide.locked"),
-                        "",
-                        "&a> Click to unlock",
-                        "",
-                        "&7Cost: &b" + research.getCost() + " Level(s)"
-                );
-                menu.addItem(i, resItem, (p, slot, item1, action) -> {
-                    research.unlockFromGuide(GUIDE, p, entry.profile, sfItem, Groups.INFINITY, 0);
-                    return false;
-                });
-            }
-            else {
-                menu.addItem(i, item.getFirstValue(), (p, slot, item1, action) -> {
-                    openInfinityRecipe(p, item.getFirstValue().getItemId(), entry);
-                    return false;
-                });
+            if (i + 1 <= allItems.size()) {
+                final Pair<SlimefunItemStack, ItemStack[]> item = pageItems.get(i);
+                final SlimefunItem sfItem = item.getFirstValue().getItem();
+                if (sfItem == null) {
+                    return;
+                }
+    
+                final Research research = sfItem.getResearch();
+                if (research != null && !entry.profile.hasUnlocked(research)) {
+                    final ItemStack resItem = new CustomItemStack(
+                            ChestMenuUtils.getNotResearchedItem(),
+                            ChatColor.WHITE + ItemUtils.getItemName(sfItem.getItem()),
+                            "&4&l" + Slimefun.getLocalization().getMessage(player, "guide.locked"),
+                            "",
+                            "&a> Click to unlock",
+                            "",
+                            "&7Cost: &b" + research.getCost() + " Level(s)"
+                    );
+                    menu.addItem(slot, resItem, (p, slot1, item1, action) -> {
+                        research.unlockFromGuide(GUIDE, p, entry.profile, sfItem, Groups.INFINITY, 0);
+                        return false;
+                    });
+                } else {
+                    menu.addItem(slot, item.getFirstValue(), (p, slot1, item1, action) -> {
+                        openInfinityRecipe(p, item.getFirstValue().getItemId(), entry);
+                        return false;
+                    });
+                }
+            } else {
+                menu.replaceExistingItem(slot, null);
+                menu.addMenuClickHandler(slot, ChestMenuUtils.getEmptyClickHandler());
             }
         }
 
@@ -295,7 +307,7 @@ public final class InfinityGroup extends FlexItemGroup {
     }
     
     private static int getPageCount() {
-        return ITEMS.values().size() / 36 + (ITEMS.values().size() % 36 != 0 ? 1 : 0);
+        return Math.ceil(ITEMS.values().size() / (double) PAGE_SIZE)
     }
 
     private static void moveRecipe(@Nonnull Player player, @Nonnull BlockMenu menu, Pair<SlimefunItemStack, ItemStack[]> pair, boolean max) {
