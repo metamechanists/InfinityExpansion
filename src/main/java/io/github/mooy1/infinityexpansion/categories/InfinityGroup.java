@@ -156,6 +156,10 @@ public final class InfinityGroup extends FlexItemGroup {
             return false;
         }));
         
+        for (int i = 47; i < 51; i++) {
+            menu.addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
+        }
+        
         menu.addItem(52, ChestMenuUtils.getNextButton(player, page, getPageCount()), ((player1, i, itemStack, clickAction) -> {
             if (page + 1 > getPageCount()) {
                 return false;
