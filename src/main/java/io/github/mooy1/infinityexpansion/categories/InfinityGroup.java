@@ -156,7 +156,7 @@ public final class InfinityGroup extends FlexItemGroup {
             return false;
         }));
         
-        for (int i = 47; i < 51; i++) {
+        for (int i = 47; i < 52; i++) {
             menu.addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
         }
         
