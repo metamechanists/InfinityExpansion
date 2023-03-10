@@ -351,6 +351,7 @@ public final class Machines {
         crops.put(Material.NETHER_WART, new ItemStack[] { new ItemStack(Material.NETHER_WART, 2) });
         crops.put(Material.SWEET_BERRIES, new ItemStack[] { new ItemStack(Material.SWEET_BERRIES, 2) });
         crops.put(Material.GLOW_BERRIES, new ItemStack[] { new ItemStack(Material.GLOW_BERRIES, 2) });
+        crops.put(Material.GLOW_LICHEN, new ItemStack[] { new ItemStack(Material.GLOW_LICHEN, 2) });
 
         new GrowingMachine(Groups.BASIC_MACHINES, BASIC_GROWER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 new ItemStack(Material.GLASS), new ItemStack(Material.GLASS), new ItemStack(Material.GLASS),
