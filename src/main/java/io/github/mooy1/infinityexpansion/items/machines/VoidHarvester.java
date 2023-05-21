@@ -1,16 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.machines;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.mooy1.infinityexpansion.items.materials.Materials;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -21,13 +12,21 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * harvests void bits from... the void
  *
  * @author Mooy1
  */
-public final class VoidHarvester extends AbstractMachineBlock implements RecipeDisplayItem {
+public final class VoidHarvester extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
 
     public static final RecipeType TYPE = new RecipeType(InfinityExpansion.createKey("void_harvester"), Machines.VOID_HARVESTER);
 
@@ -39,6 +38,11 @@ public final class VoidHarvester extends AbstractMachineBlock implements RecipeD
     public VoidHarvester(ItemGroup category, SlimefunItemStack item, RecipeType type, ItemStack[] recipe, int speed) {
         super(category, item, type, recipe);
         this.speed = speed;
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return this.energyPerTick;
     }
 
     @Override

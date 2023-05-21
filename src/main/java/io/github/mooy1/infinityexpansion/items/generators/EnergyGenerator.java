@@ -1,12 +1,6 @@
 package io.github.mooy1.infinityexpansion.items.generators;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyProducer;
 import io.github.mooy1.infinitylib.machines.MachineLore;
 import io.github.mooy1.infinitylib.machines.MenuBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -20,6 +14,12 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Solar panels and some other basic generators
@@ -29,7 +29,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
  * Thanks to panda for some stuff to work off of
  */
 @ParametersAreNonnullByDefault
-public final class EnergyGenerator extends MenuBlock implements EnergyNetProvider {
+public final class EnergyGenerator extends MenuBlock implements EnergyNetProvider, EnergyProducer {
 
     private final GenerationType type;
     private final int generation;
@@ -41,7 +41,8 @@ public final class EnergyGenerator extends MenuBlock implements EnergyNetProvide
         this.generation = generation;
     }
 
-    public int getGeneration() {
+    @Override
+    public int getEnergyGenerated() {
         return this.generation;
     }
 

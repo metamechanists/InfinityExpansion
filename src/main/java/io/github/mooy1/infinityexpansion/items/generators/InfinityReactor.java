@@ -1,17 +1,6 @@
 package io.github.mooy1.infinityexpansion.items.generators;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyProducer;
 import io.github.mooy1.infinityexpansion.items.materials.Materials;
 import io.github.mooy1.infinitylib.common.StackUtils;
 import io.github.mooy1.infinitylib.machines.MenuBlock;
@@ -26,6 +15,16 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A reactor that generates huge power but costs infinity ingots and void ingots
@@ -33,7 +32,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
  * @author Mooy1
  */
 @ParametersAreNonnullByDefault
-public final class InfinityReactor extends MenuBlock implements EnergyNetProvider, RecipeDisplayItem {
+public final class InfinityReactor extends MenuBlock implements EnergyNetProvider, RecipeDisplayItem, EnergyProducer {
 
     private static final int INFINITY_INTERVAL = 196000;
     private static final int VOID_INTERVAL = 32000;
@@ -45,6 +44,11 @@ public final class InfinityReactor extends MenuBlock implements EnergyNetProvide
     public InfinityReactor(ItemGroup category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, int gen) {
         super(category, item, recipeType, recipe);
         this.gen = gen;
+    }
+
+    @Override
+    public int getEnergyGenerated() {
+        return this.gen;
     }
 
     @Override
@@ -214,5 +218,6 @@ public final class InfinityReactor extends MenuBlock implements EnergyNetProvide
 
         return items;
     }
+
 
 }

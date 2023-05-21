@@ -1,19 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.quarries;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
@@ -24,6 +12,17 @@ import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Mines stuff
@@ -31,7 +30,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
  * @author Mooy1
  */
 @ParametersAreNonnullByDefault
-public final class Quarry extends AbstractMachineBlock implements RecipeDisplayItem {
+public final class Quarry extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
 
     private static final boolean ALLOW_NETHER_IN_OVERWORLD =
             InfinityExpansion.config().getBoolean("quarry-options.output-nether-materials-in-overworld");
@@ -64,6 +63,11 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
         this.speed = speed;
         this.chance = chance;
         this.outputs = outputs;
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return this.energyPerTick;
     }
 
     @Override

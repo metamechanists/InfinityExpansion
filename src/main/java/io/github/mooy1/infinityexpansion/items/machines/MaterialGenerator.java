@@ -1,32 +1,30 @@
 package io.github.mooy1.infinityexpansion.items.machines;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import lombok.Setter;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import lombok.Setter;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Machines that generate materials at the cost of energy
  *
  * @author Mooy1
  */
-public final class MaterialGenerator extends AbstractMachineBlock implements RecipeDisplayItem {
+public final class MaterialGenerator extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
 
     private static final int[] OUTPUT_SLOTS = { 13 };
     private static final int STATUS_SLOT = 4;
@@ -105,4 +103,8 @@ public final class MaterialGenerator extends AbstractMachineBlock implements Rec
         return true;
     }
 
+    @Override
+    public int getEnergyConsumption() {
+        return this.energyPerTick;
+    }
 }

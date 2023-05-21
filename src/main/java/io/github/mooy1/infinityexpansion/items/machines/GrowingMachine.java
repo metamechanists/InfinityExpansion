@@ -1,29 +1,27 @@
 package io.github.mooy1.infinityexpansion.items.machines;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import lombok.Setter;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import lombok.Setter;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
-public final class GrowingMachine extends AbstractMachineBlock implements RecipeDisplayItem {
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+public final class GrowingMachine extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
 
     private static final int[] OUTPUT_SLOTS = {
             13, 14, 15, 16,
@@ -43,6 +41,11 @@ public final class GrowingMachine extends AbstractMachineBlock implements Recipe
 
     public GrowingMachine(ItemGroup category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return this.energyPerTick;
     }
 
     @Override

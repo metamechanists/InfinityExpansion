@@ -1,19 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.machines;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import lombok.AllArgsConstructor;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
@@ -22,16 +10,26 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.NotHopperable;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+import lombok.AllArgsConstructor;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Turns cobble into stuff
  */
 @ParametersAreNonnullByDefault
-public final class StoneworksFactory extends AbstractMachineBlock implements RecipeDisplayItem, NotHopperable {
+public final class StoneworksFactory extends AbstractMachineBlock implements RecipeDisplayItem, NotHopperable, EnergyConsumer {
 
     private static final int[] PROCESS_BORDER = { 0, 1, 2, 3, 4, 5, 18, 19, 20, 21, 22, 23 };
     private static final int[] OUT_BORDER = { 6, 7, 8, 17, 24, 25, 26 };
@@ -44,6 +42,11 @@ public final class StoneworksFactory extends AbstractMachineBlock implements Rec
 
     public StoneworksFactory(ItemGroup category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return this.energyPerTick;
     }
 
     @Override

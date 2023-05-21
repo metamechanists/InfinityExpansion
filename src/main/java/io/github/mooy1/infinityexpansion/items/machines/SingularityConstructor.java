@@ -1,23 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.machines;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import lombok.AllArgsConstructor;
-import lombok.Setter;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.mooy1.infinityexpansion.utils.Util;
 import io.github.mooy1.infinitylib.common.StackUtils;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
@@ -27,16 +11,30 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Constructs singularities form many items
  *
  * @author Mooy1
  */
-public final class SingularityConstructor extends AbstractMachineBlock implements RecipeDisplayItem {
+public final class SingularityConstructor extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
 
     private static final List<Recipe> RECIPE_LIST = new ArrayList<>();
     private static final Map<String, Pair<Integer, Recipe>> RECIPE_MAP = new HashMap<>();
@@ -64,6 +62,11 @@ public final class SingularityConstructor extends AbstractMachineBlock implement
 
     public SingularityConstructor(ItemGroup category, SlimefunItemStack item, RecipeType type, ItemStack[] recipe) {
         super(category, item, type, recipe);
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return this.energyPerTick;
     }
 
     @Override

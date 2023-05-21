@@ -1,13 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.machines;
 
-import javax.annotation.Nonnull;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
@@ -16,13 +10,19 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import io.github.thebusybiscuit.slimefun4.core.networks.energy.EnergyNetComponentType;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
 
 /**
  * A block that becomes bedrock when powered, for decoration of course
  *
  * @author Mooy1
  */
-public final class PoweredBedrock extends SlimefunItem implements EnergyNetComponent {
+public final class PoweredBedrock extends SlimefunItem implements EnergyNetComponent, EnergyConsumer {
 
     private final int energy;
 
@@ -54,6 +54,11 @@ public final class PoweredBedrock extends SlimefunItem implements EnergyNetCompo
                 removeCharge(l, energy);
             }
         });
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return this.energy;
     }
 
     @Nonnull
