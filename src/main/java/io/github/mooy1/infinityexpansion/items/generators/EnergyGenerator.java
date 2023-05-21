@@ -41,6 +41,10 @@ public final class EnergyGenerator extends MenuBlock implements EnergyNetProvide
         this.generation = generation;
     }
 
+    public int getGeneration() {
+        return this.generation;
+    }
+
     @Override
     protected void setup(BlockMenuPreset blockMenuPreset) {
         blockMenuPreset.drawBackground(new int[] {
