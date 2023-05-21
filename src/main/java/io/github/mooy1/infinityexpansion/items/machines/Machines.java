@@ -347,11 +347,16 @@ public final class Machines {
         crops.put(Material.COCOA_BEANS, new ItemStack[] { new ItemStack(Material.COCOA_BEANS, 2) });
         crops.put(Material.CACTUS, new ItemStack[] { new ItemStack(Material.CACTUS, 2) });
         crops.put(Material.BAMBOO, new ItemStack[] { new ItemStack(Material.BAMBOO, 6) });
+        crops.put(Material.KELP, new ItemStack[] { new ItemStack(Material.KELP, 6)});
         crops.put(Material.CHORUS_FLOWER, new ItemStack[] { new ItemStack(Material.CHORUS_FRUIT, 6) });
         crops.put(Material.NETHER_WART, new ItemStack[] { new ItemStack(Material.NETHER_WART, 2) });
         crops.put(Material.SWEET_BERRIES, new ItemStack[] { new ItemStack(Material.SWEET_BERRIES, 2) });
         crops.put(Material.GLOW_BERRIES, new ItemStack[] { new ItemStack(Material.GLOW_BERRIES, 2) });
         crops.put(Material.GLOW_LICHEN, new ItemStack[] { new ItemStack(Material.GLOW_LICHEN, 2) });
+        crops.put(Material.SEAGRASS, new ItemStack[] { new ItemStack(Material.SEAGRASS, 2) });
+        crops.put(Material.LILY_PAD, new ItemStack[] { new ItemStack(Material.LILY_PAD, 2) });
+        crops.put(Material.SEA_PICKLE, new ItemStack[] { new ItemStack(Material.SEA_PICKLE, 2) });
+        crops.put(Material.BIG_DRIPLEAF, new ItemStack[] { new ItemStack(Material.SMALL_DRIPLEAF) });
 
         new GrowingMachine(Groups.BASIC_MACHINES, BASIC_GROWER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 new ItemStack(Material.GLASS), new ItemStack(Material.GLASS), new ItemStack(Material.GLASS),
