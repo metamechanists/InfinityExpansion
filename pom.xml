@@ -146,4 +146,11 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>metamechanists-repo</id>
+            <url>http://localhost:8085/releases</url>
+        </repository>
+    </distributionManagement>
 </project>
