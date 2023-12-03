@@ -1,11 +1,14 @@
 package io.github.mooy1.infinityexpansion.items.mobdata;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -78,10 +81,16 @@ public final class MobDataCard extends SlimefunItem implements RecipeDisplayItem
     @Override
     public List<ItemStack> getDisplayRecipes() {
         List<ItemStack> items = new ArrayList<>();
-        for (Map.Entry<ItemStack, Float> drop : this.drops.toMap().entrySet()) {
+        List<Map.Entry<ItemStack, Float>> entries = new ArrayList<>(this.drops.toMap().entrySet());
+        entries.sort(Comparator.comparingDouble(Map.Entry::getValue));
+        for (Map.Entry<ItemStack, Float> drop : entries) {
+            final double chance = drop.getValue() * 100;
+            final DecimalFormat format = new DecimalFormat("0.#");
+            format.setMaximumFractionDigits(6);
+            
             items.add(null);
             items.add(new CustomItemStack(drop.getKey(), meta -> {
-                meta.setLore(List.of(ChatColors.color("&8⇨ &7Chance: &b" + (drop.getValue() * 100) + "%")));
+                meta.setLore(List.of(ChatColors.color("&8⇨ &7Chance: &b" + format.format(chance) + "%")));
             }));
         }
         return items;
