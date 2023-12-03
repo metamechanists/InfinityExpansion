@@ -1,7 +1,6 @@
 package io.github.mooy1.infinityexpansion.items.blocks;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -127,7 +127,7 @@ public final class StrainerBase extends TickingMenuBlock implements RecipeDispla
         for (ItemStack output : OUTPUTS) {
             items.add(Materials.BASIC_STRAINER);
             items.add(new CustomItemStack(output, meta -> {
-                meta.setLore(Collections.singletonList("&8⇨ &7Chance: &b" + (int) ((1.0F / OUTPUTS.length) * 100) + "%"));
+                meta.setLore(List.of(ChatColors.color("&8⇨ &7Chance: &b" + (int) ((1.0F / OUTPUTS.length) * 100) + "%")));
             }));
         }
 
