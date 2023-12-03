@@ -1,6 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.mobdata;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -75,10 +76,13 @@ public final class MobDataCard extends SlimefunItem implements RecipeDisplayItem
     @Nonnull
     @Override
     public List<ItemStack> getDisplayRecipes() {
+        float weightFactor = 100F / this.drops.sumWeights();
         List<ItemStack> items = new ArrayList<>();
-        for (ItemStack item : this.drops) {
+        for (Map.Entry<ItemStack, Float> drop : this.drops.toMap().entrySet()) {
             items.add(null);
-            items.add(item);
+            items.add(new CustomItemStack(drop.getKey(), meta -> {
+                meta.setLore(Collections.singletonList("&8⇨ &7Chance: &b" + (int) (drop.getValue() * weightFactor) + "%"));
+            }));
         }
         return items;
     }

@@ -1,6 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.blocks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -125,7 +126,9 @@ public final class StrainerBase extends TickingMenuBlock implements RecipeDispla
 
         for (ItemStack output : OUTPUTS) {
             items.add(Materials.BASIC_STRAINER);
-            items.add(output);
+            items.add(new CustomItemStack(output, meta -> {
+                meta.setLore(Collections.singletonList("&8⇨ &7Chance: &b" + (int) ((1.0F / OUTPUTS.length) * 100) + "%"));
+            }));
         }
 
         return items;
