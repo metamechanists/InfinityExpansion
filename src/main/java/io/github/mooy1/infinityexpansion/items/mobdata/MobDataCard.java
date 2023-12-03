@@ -81,7 +81,7 @@ public final class MobDataCard extends SlimefunItem implements RecipeDisplayItem
         for (Map.Entry<ItemStack, Float> drop : this.drops.toMap().entrySet()) {
             items.add(null);
             items.add(new CustomItemStack(drop.getKey(), meta -> {
-                meta.setLore(List.of(ChatColors.color("&8⇨ &7Chance: &b" + (int) (drop.getValue() * 100) + "%")));
+                meta.setLore(List.of(ChatColors.color("&8⇨ &7Chance: &b" + (drop.getValue() * 100) + "%")));
             }));
         }
         return items;
