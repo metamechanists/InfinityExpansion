@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -76,12 +77,11 @@ public final class MobDataCard extends SlimefunItem implements RecipeDisplayItem
     @Nonnull
     @Override
     public List<ItemStack> getDisplayRecipes() {
-        float weightFactor = 100F / this.drops.sumWeights();
         List<ItemStack> items = new ArrayList<>();
         for (Map.Entry<ItemStack, Float> drop : this.drops.toMap().entrySet()) {
             items.add(null);
             items.add(new CustomItemStack(drop.getKey(), meta -> {
-                meta.setLore(Collections.singletonList("&8⇨ &7Chance: &b" + (int) (drop.getValue() * weightFactor) + "%"));
+                meta.setLore(List.of(ChatColors.color("&8⇨ &7Chance: &b" + (int) (drop.getValue() * 100) + "%")));
             }));
         }
         return items;
