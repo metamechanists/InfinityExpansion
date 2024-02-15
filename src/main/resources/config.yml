@@ -31,6 +31,7 @@ quarry-options:
     redstone: .5
     quartz: .5
     emerald: .5
+    gold: .5
 
   # The number of slimefun ticks it takes to mine 1 block. 1 slimefun ticks = .6 seconds by default
   ticks-per-output: 10
