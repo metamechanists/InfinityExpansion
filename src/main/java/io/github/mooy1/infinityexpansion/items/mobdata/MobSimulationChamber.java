@@ -2,6 +2,7 @@ package io.github.mooy1.infinityexpansion.items.mobdata;
 
 import javax.annotation.Nonnull;
 
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,7 +27,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
 
-public final class MobSimulationChamber extends TickingMenuBlock implements EnergyNetComponent {
+public final class MobSimulationChamber extends TickingMenuBlock implements EnergyNetComponent, EnergyConsumer {
 
     static final double XP_MULTIPLIER = InfinityExpansion.config().getDouble("mob-simulation-options.xp-multiplier", 0, 1000);
 
@@ -61,6 +62,17 @@ public final class MobSimulationChamber extends TickingMenuBlock implements Ener
     @Override
     public EnergyNetComponentType getEnergyComponentType() {
         return EnergyNetComponentType.CONSUMER;
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return 0;
+    }
+
+    @Override
+    public int getEnergyConsumption(Block block) {
+        MobDataCard card = getCard(block);
+        return card == null ? 0 : card.tier.energy + this.energy;
     }
 
     @Override
@@ -130,16 +142,19 @@ public final class MobSimulationChamber extends TickingMenuBlock implements Ener
         return new CustomItemStack(Material.LIME_STAINED_GLASS_PANE, "&aStored xp: " + stored, "", "&a> Click to claim");
     }
 
-    @Override
-    protected void tick(@Nonnull Block b, @Nonnull BlockMenu inv) {
-        ItemStack input = inv.getItemInSlot(CARD_SLOT);
-
-        if (input == null) {
-            return;
+    private static MobDataCard getCard(Block block) {
+        BlockMenu menu = BlockStorage.getInventory(block);
+        if (menu == null) {
+            return null;
         }
 
-        MobDataCard card = MobDataCard.CARDS.get(StackUtils.getId(input));
+        ItemStack input = menu.getItemInSlot(CARD_SLOT);
+        return input == null ? null : MobDataCard.CARDS.get(StackUtils.getId(input));
+    }
 
+    @Override
+    protected void tick(@Nonnull Block b, @Nonnull BlockMenu inv) {
+        MobDataCard card = getCard(b);
         if (card == null) {
             if (inv.hasViewer()) {
                 inv.replaceExistingItem(STATUS_SLOT, NO_CARD);
@@ -181,5 +196,4 @@ public final class MobSimulationChamber extends TickingMenuBlock implements Ener
             inv.replaceExistingItem(STATUS_SLOT, NO_ROOM_ITEM);
         }
     }
-
 }

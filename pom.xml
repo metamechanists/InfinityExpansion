@@ -55,9 +55,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.mooy1</groupId>
+            <groupId>com.github.metamechanists</groupId>
             <artifactId>InfinityLib</artifactId>
-            <version>1.3.9</version>
+            <version>feb32abec9</version>
             <scope>compile</scope>
         </dependency>
 

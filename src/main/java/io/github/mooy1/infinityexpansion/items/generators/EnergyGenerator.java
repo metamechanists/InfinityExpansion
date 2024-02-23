@@ -16,6 +16,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -44,6 +45,11 @@ public final class EnergyGenerator extends MenuBlock implements EnergyNetProvide
     @Override
     public int getEnergyGenerated() {
         return this.generation;
+    }
+
+    @Override
+    public int getEnergyGenerated(Block block) {
+        return this.type.generate(block.getWorld(), block, this.generation);
     }
 
     @Override
