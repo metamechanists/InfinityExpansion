@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.metamechanists</groupId>
     <artifactId>InfinityExpansion</artifactId>
-    <version>2</version>
+    <version>3</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
