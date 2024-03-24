@@ -407,7 +407,7 @@ public final class StorageCache {
         return null;
     }
 
-    private void setStored(ItemStack input) {
+    public void setStored(ItemStack input) {
         this.meta = input.hasItemMeta() ? input.getItemMeta() : null;
         setDisplayName(ItemUtils.getItemName(input));
         this.material = input.getType();
