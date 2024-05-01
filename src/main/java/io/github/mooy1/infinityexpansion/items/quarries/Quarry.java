@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -113,10 +114,10 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
         QuarryPool pool = this.pools.get(b.getWorld().getEnvironment());
         ItemStack outputItem = new ItemStack(pool.commonDrop(), this.speed);
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        if (ThreadLocalRandom.current().nextInt(pool.chanceOverride(this.chance)) == 0) {
+        if (ThreadLocalRandom.current().nextInt(this.chance) == 0) {
             final SlimefunItem sfItem = SlimefunItem.getByItem(inv.getItemInSlot(OSCILLATOR_SLOT));
             if (sfItem instanceof Oscillator oscillator && random.nextDouble() >= oscillator.chance) {
-                outputItem = new ItemStack(oscillator.output(pool, random), this.speed);
+                outputItem = new ItemStack(oscillator.output(this, pool, random), this.speed);
             } else {
                 outputItem = new ItemStack(pool.drops().getRandom(random), this.speed);
             }
@@ -130,6 +131,11 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
     public int getEnergyConsumption() {
         return this.energyPerTick;
     }
+
+    public Map<World.Environment, QuarryPool> getPools() {
+        return Collections.unmodifiableMap(this.pools);
+    }
+
     @Override
     public @Nonnull String getRecipeSectionLabel(@Nonnull Player ignored) {
         return "&7Mines:";
@@ -160,11 +166,16 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
         return itemStacks;
     }
 
-    private void addWithChance(List<ItemStack> itemStacks, ItemStack itemStack, World.Environment dimension, double chance) {
+    @ParametersAreNonnullByDefault
+    public void addWithChance(List<ItemStack> itemStacks, ItemStack itemStack, @Nullable World.Environment dimension, double chance) {
         itemStacks.add(new CustomItemStack(itemStack, meta -> {
             final List<String> lore = new ArrayList<>();
-            final String name = ChatUtils.humanize(dimension.name()).replace("Normal", "Overworld");
-            lore.add(ChatColors.color("&7Mined In: &b" + name));
+
+            if (dimension != null) {
+                final String name = ChatUtils.humanize(dimension.name()).replace("Normal", "Overworld");
+                lore.add(ChatColors.color("&7Mined In: &b" + name));
+            }
+
             lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(chance)));
             meta.setLore(lore);
         }));

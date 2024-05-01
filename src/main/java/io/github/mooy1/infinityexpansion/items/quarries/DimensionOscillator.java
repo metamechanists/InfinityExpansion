@@ -24,15 +24,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class DimensionOscillator extends Oscillator {
     protected static final ItemStack ARROW = PlayerHead.getItemStack(PlayerSkin.fromHashCode("682ad1b9cb4dd21259c0d75aa315ff389c3cef752be3949338164bac84a96e"));
-    protected final QuarryPool pool;
+    protected final World.Environment dimension;
 
-    public DimensionOscillator(World.Environment dimension, QuarryPool pool, Material itemType, double chance) {
+    public DimensionOscillator(World.Environment dimension, Material itemType, double chance) {
         super(Groups.MAIN_MATERIALS, create(dimension, itemType), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 Materials.MACHINE_PLATE, Materials.VOID_INGOT, Materials.MACHINE_PLATE,
                 Materials.VOID_INGOT, new ItemStack(itemType), Materials.VOID_INGOT,
                 Materials.MACHINE_PLATE, Materials.VOID_INGOT, Materials.MACHINE_PLATE
         }, chance);
-        this.pool = pool;
+        this.dimension = dimension;
     }
 
     private static SlimefunItemStack create(World.Environment dimension, Material display) {
@@ -50,18 +50,19 @@ public class DimensionOscillator extends Oscillator {
     public List<ItemStack> getDisplayRecipes() {
         final List<ItemStack> itemStacks = new ArrayList<>();
         for (Quarry quarry : Quarry.getQuarries()) {
-            final double baseChance = ((1D / this.pool.chanceOverride(quarry.chance())) * this.chance);
-            final int speed = quarry.speed();
+            final double baseChance = ((1D / quarry.chance()) * this.chance);
             itemStacks.add(quarry.getItem());
             itemStacks.add(new CustomItemStack(ARROW, " "));
-            var entries = new ArrayList<>(this.pool.drops().toMap().entrySet());
+
+            QuarryPool pool = quarry.getPools().get(this.dimension);
+            ArrayList<Map.Entry<Material, Float>> entries = new ArrayList<>(pool.drops().toMap().entrySet());
             entries.sort(Comparator.comparingDouble(Map.Entry::getValue));
+
+            quarry.addWithChance(itemStacks, new ItemStack(pool.commonDrop(), quarry.speed()),
+                    null, baseChance * (1D/10D));
             for (Map.Entry<Material, Float> drop : entries) {
-                itemStacks.add(new CustomItemStack(new ItemStack(drop.getKey(), speed), meta -> {
-                    final List<String> lore = new ArrayList<>();
-                    lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(baseChance * drop.getValue())));
-                    meta.setLore(lore);
-                }));
+                quarry.addWithChance(itemStacks, new ItemStack(drop.getKey(), quarry.speed()),
+                        null, baseChance * (9D/10D) * drop.getValue());
             }
 
             // Add divider between quarrys
@@ -76,7 +77,9 @@ public class DimensionOscillator extends Oscillator {
     }
 
     @Override
-    public Material output(QuarryPool pool, ThreadLocalRandom random) {
-        return this.pool.drops().getRandom(random);
+    public Material output(Quarry quarry, QuarryPool pool, ThreadLocalRandom random) {
+        return random.nextInt(10) == 0
+                ? quarry.getPools().get(this.dimension).commonDrop()
+                : quarry.getPools().get(this.dimension).drops().getRandom(random);
     }
 }

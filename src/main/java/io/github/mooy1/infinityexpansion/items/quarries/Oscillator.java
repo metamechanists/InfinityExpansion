@@ -54,21 +54,16 @@ public class Oscillator extends SlimefunItem implements RecipeDisplayItem {
 
     @Override
     public @Nonnull List<ItemStack> getDisplayRecipes() {
-        final List<ItemStack> recipes = new ArrayList<>();
+        final List<ItemStack> itemStacks = new ArrayList<>();
         for (Quarry quarry : Quarry.getQuarries()) {
-            recipes.add(quarry.getItem());
-            final int speed = quarry.speed();
-            final double chance = ((1D / quarry.chance()) * this.chance);
-            recipes.add(new CustomItemStack(new ItemStack(this.getItem().getType(), speed), meta -> {
-                final List<String> lore = new ArrayList<>();
-                lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(chance)));
-                meta.setLore(lore);
-            }));
+            itemStacks.add(quarry.getItem());
+            quarry.addWithChance(itemStacks, new ItemStack(this.getItem().getType(), quarry.speed()),
+                    null, (1D / quarry.chance()) * this.chance);
         }
-        return recipes;
+        return itemStacks;
     }
 
-    public Material output(QuarryPool pool, ThreadLocalRandom random) {
+    public Material output(Quarry quarry, QuarryPool pool, ThreadLocalRandom random) {
         final Material output = this.getItem().getType();
         return pool.commonDrop() != output && !pool.drops().contains(output)
                 ? pool.drops().getRandom(random)

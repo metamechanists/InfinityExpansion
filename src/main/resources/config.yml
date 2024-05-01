@@ -43,7 +43,6 @@ quarry-options:
 
     nether:
       common_drop: netherrack
-      common_chance_override: 0.75
       drops:
         gold_ingot: 0.3
         quartz: 0.2
@@ -51,7 +50,6 @@ quarry-options:
 
     the_end:
       common_drop: end_stone
-      common_chance_override: 0.75
       drops:
         obsidian: 0.1
 
