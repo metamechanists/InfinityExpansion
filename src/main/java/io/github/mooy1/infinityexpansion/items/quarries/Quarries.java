@@ -30,7 +30,8 @@ public final class Quarries {
             "BASIC_QUARRY",
             Material.CHISELED_SANDSTONE,
             "&9Basic Quarry",
-            "&7Automatically mines overworld ores",
+            "&7A pocket quarry to mine",
+            "&7from your dimension automatically.",
             "",
             MachineLore.speed(1),
             MachineLore.energyPerSecond(300)
@@ -39,25 +40,28 @@ public final class Quarries {
             "ADVANCED_QUARRY",
             Material.CHISELED_RED_SANDSTONE,
             "&cAdvanced Quarry",
-            "&7Automatically mines overworld and nether ores",
+            "&7A pocket quarry to mine",
+            "&7from your dimension automatically.",
             "",
             MachineLore.speed(2),
-            MachineLore.energyPerSecond(900)
+            MachineLore.energyPerSecond(750)
     );
     public static final SlimefunItemStack VOID_QUARRY = new SlimefunItemStack(
             "VOID_QUARRY",
             Material.CHISELED_NETHER_BRICKS,
             "&8Void Quarry",
-            "&7Automatically mines overworld and nether ores",
+            "&7A pocket quarry to mine",
+            "&7from your dimension automatically.",
             "",
             MachineLore.speed(6),
-            MachineLore.energyPerSecond(3600)
+            MachineLore.energyPerSecond(3000)
     );
     public static final SlimefunItemStack INFINITY_QUARRY = new SlimefunItemStack(
             "INFINITY_QUARRY",
             Material.CHISELED_POLISHED_BLACKSTONE,
             "&bInfinity Quarry",
-            "&7Automatically mines overworld and nether ores",
+            "&7A pocket quarry to mine",
+            "&7from your dimension automatically.",
             "",
             MachineLore.speed(64),
             MachineLore.energyPerSecond(36000)
