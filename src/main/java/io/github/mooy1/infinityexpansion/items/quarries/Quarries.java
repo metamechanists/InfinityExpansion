@@ -68,18 +68,20 @@ public final class Quarries {
         Objects.requireNonNull(config);
 
         Map<World.Environment, QuarryPool> pools = new HashMap<>();
-        ConfigurationSection poolsConfig = config.getConfigurationSection("oscillators");
+        ConfigurationSection poolsConfig = config.getConfigurationSection("pools");
         if (poolsConfig != null) {
             for (String poolType : poolsConfig.getKeys(false)) {
-                poolType = poolType.toUpperCase(Locale.ROOT).replace("OVERWORLD", "NORMAL");
                 try {
-                    World.Environment dimension = World.Environment.valueOf(poolType);
                     ConfigurationSection pool = poolsConfig.getConfigurationSection(poolType);
+                    World.Environment dimension = World.Environment.valueOf(poolType.toUpperCase(Locale.ROOT).replace("OVERWORLD", "NORMAL"));
                     if (pool != null) {
                         pools.put(dimension, QuarryPool.load(pool));
+                    } else {
+                        addon.getLogger().warning("Missing pool section for " + poolType);
                     }
-                } catch (Exception ignored) {
+                } catch (Exception e) {
                     addon.getLogger().warning("Invalid Quarry Pool: " + poolType + ", skipping");
+                    addon.getLogger().warning(e::getLocalizedMessage);
                 }
             }
         }
@@ -87,11 +89,17 @@ public final class Quarries {
         ConfigurationSection oscillators = config.getConfigurationSection("oscillators");
         if (oscillators != null) {
             for (String oscillator : oscillators.getKeys(false)) {
-                oscillator = oscillator.toUpperCase(Locale.ROOT);
-                Material resource = Material.getMaterial(oscillator);
-                double chance = oscillators.getDouble(oscillator);
-                if (resource != null && chance > 0) {
-                    new Oscillator(resource, chance).register(addon);
+                try {
+                    Material resource = Material.valueOf(oscillator.toUpperCase(Locale.ROOT));
+                    double chance = oscillators.getDouble(oscillator);
+                    if (chance > 0) {
+                        new Oscillator(resource, chance).register(addon);
+                    } else {
+                        addon.getLogger().info("Oscillator " + oscillator + "has 0 chance, skipping");
+                    }
+                } catch (Exception e) {
+                    addon.getLogger().warning("Invalid Oscillator: " + oscillator + ", skipping");
+                    addon.getLogger().warning(e::getLocalizedMessage);
                 }
             }
         }
@@ -101,9 +109,8 @@ public final class Quarries {
             for (String oscillatorType : dimensionOscillators.getKeys(false)) {
                 ConfigurationSection oscillator = dimensionOscillators.getConfigurationSection(oscillatorType);
                 if (oscillator != null) {
-                    oscillatorType = oscillatorType.toUpperCase(Locale.ROOT).replace("OVERWORLD", "NORMAL");
                     try {
-                        World.Environment dimension = World.Environment.valueOf(oscillatorType);
+                        World.Environment dimension = World.Environment.valueOf(oscillatorType.toUpperCase(Locale.ROOT).replace("OVERWORLD", "NORMAL"));
                         Material display = Material.valueOf(oscillator.getString("item_type"));
                         double chance = oscillator.getDouble("chance");
                         if (chance > 0) {

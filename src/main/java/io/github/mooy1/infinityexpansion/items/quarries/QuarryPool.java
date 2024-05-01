@@ -1,5 +1,6 @@
 package io.github.mooy1.infinityexpansion.items.quarries;
 
+import io.github.mooy1.infinityexpansion.InfinityExpansion;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.RandomizedSet;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,11 +22,17 @@ public record QuarryPool(Material commonDrop, RandomizedSet<Material> drops) {
         ConfigurationSection dropsSection = section.getConfigurationSection("drops");
         if (dropsSection != null) {
             for (String dropType : dropsSection.getKeys(false)) {
-                dropType = dropType.toUpperCase(Locale.ROOT);
-                Material drop = Material.getMaterial(dropType);
-                double weight = dropsSection.getDouble(dropType);
-                if (drop != null && weight > 0) {
-                    drops.add(drop, (float) weight);
+                try {
+                    Material drop = Material.valueOf(dropType.toUpperCase(Locale.ROOT));
+                    double weight = dropsSection.getDouble(dropType);
+                    if (weight > 0) {
+                        drops.add(drop, (float) weight);
+                    } else {
+                        InfinityExpansion.getInstance().getLogger().info("Quarry Drop " + dropType + " has 0 chance, skipping");
+                    }
+                } catch (Exception e) {
+                    InfinityExpansion.getInstance().getLogger().warning("Invalid Quarry Drop: " + dropType + ", skipping");
+                    InfinityExpansion.getInstance().getLogger().warning(e::getLocalizedMessage);
                 }
             }
         }
