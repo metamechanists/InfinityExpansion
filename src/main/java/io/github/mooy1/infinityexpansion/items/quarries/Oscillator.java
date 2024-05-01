@@ -56,12 +56,12 @@ public class Oscillator extends SlimefunItem implements RecipeDisplayItem {
     public @Nonnull List<ItemStack> getDisplayRecipes() {
         final List<ItemStack> recipes = new ArrayList<>();
         for (Quarry quarry : Quarry.getQuarries()) {
-            final double chance = ((1D / quarry.getChance()) * this.chance) * 100;
-            final int speed = quarry.getSpeed();
             recipes.add(quarry.getItem());
+            final int speed = quarry.speed();
+            final double chance = ((1D / quarry.chance()) * this.chance);
             recipes.add(new CustomItemStack(new ItemStack(this.getItem().getType(), speed), meta -> {
                 final List<String> lore = new ArrayList<>();
-                lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(chance)));
+                lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(chance * 100)));
                 meta.setLore(lore);
             }));
         }
