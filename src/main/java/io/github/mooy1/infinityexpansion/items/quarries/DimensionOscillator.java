@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,7 @@ public class DimensionOscillator extends Oscillator {
             QuarryPool pool = quarry.getPools().get(this.dimension);
             ArrayList<Map.Entry<Material, Float>> entries = new ArrayList<>(pool.drops().toMap().entrySet());
             entries.sort(Comparator.comparingDouble(Map.Entry::getValue));
+            Collections.reverse(entries);
 
             quarry.addWithChance(itemStacks, new ItemStack(pool.commonDrop(), quarry.speed()),
                     null, baseChance * (1D/10D));

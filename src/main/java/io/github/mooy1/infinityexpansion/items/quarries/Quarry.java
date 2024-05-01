@@ -150,6 +150,7 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
             addWithChance(itemStacks, new ItemStack(pool.commonDrop(), this.speed), dimension, (baseChance - 1F) / baseChance);
             var entries = new ArrayList<>(pool.drops().toMap().entrySet());
             entries.sort(Comparator.comparingDouble(Map.Entry::getValue));
+            Collections.reverse(entries);
             for (Map.Entry<Material, Float> drop : entries) {
                 addWithChance(itemStacks, new ItemStack(drop.getKey(), this.speed), dimension, (1F / baseChance) * drop.getValue());
             }
