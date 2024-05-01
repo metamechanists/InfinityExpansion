@@ -26,6 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -141,7 +142,9 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
             QuarryPool pool = this.pools.get(dimension);
             int baseChance = pool.chanceOverride(this.chance);
             addWithChance(itemStacks, new ItemStack(pool.commonDrop(), this.speed), dimension, (baseChance - 1F) / baseChance);
-            for (Map.Entry<Material, Float> drop : pool.drops().toMap().entrySet()) {
+            var entries = new ArrayList<>(pool.drops().toMap().entrySet());
+            entries.sort(Comparator.comparingDouble(Map.Entry::getValue));
+            for (Map.Entry<Material, Float> drop : entries) {
                 addWithChance(itemStacks, new ItemStack(drop.getKey(), this.speed), dimension, (1F / baseChance) * drop.getValue());
             }
 
