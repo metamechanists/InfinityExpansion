@@ -4,10 +4,12 @@ import io.github.mooy1.infinityexpansion.categories.Groups;
 import io.github.mooy1.infinityexpansion.items.materials.Materials;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
+import io.github.thebusybiscuit.slimefun4.utils.HeadTexture;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
@@ -21,13 +23,14 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DimensionOscillator extends Oscillator {
+    protected static final ItemStack ARROW = PlayerHead.getItemStack(PlayerSkin.fromHashCode("682ad1b9cb4dd21259c0d75aa315ff389c3cef752be3949338164bac84a96e"));
     protected final QuarryPool pool;
 
     public DimensionOscillator(World.Environment dimension, QuarryPool pool, Material itemType, double chance) {
         super(Groups.MAIN_MATERIALS, create(dimension, itemType), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
-                Materials.MACHINE_PLATE, SlimefunItems.BLISTERING_INGOT_3, Materials.MACHINE_PLATE,
-                SlimefunItems.BLISTERING_INGOT_3, new ItemStack(itemType), SlimefunItems.BLISTERING_INGOT_3,
-                Materials.MACHINE_PLATE, SlimefunItems.BLISTERING_INGOT_3, Materials.MACHINE_PLATE
+                Materials.MACHINE_PLATE, Materials.VOID_INGOT, Materials.MACHINE_PLATE,
+                Materials.VOID_INGOT, new ItemStack(itemType), Materials.VOID_INGOT,
+                Materials.MACHINE_PLATE, Materials.VOID_INGOT, Materials.MACHINE_PLATE
         }, chance);
         this.pool = pool;
     }
@@ -37,7 +40,7 @@ public class DimensionOscillator extends Oscillator {
         return new SlimefunItemStack(
                 "QUARRY_OSCILLATOR_" + name.toUpperCase(Locale.ROOT),
                 display,
-                "&d[" + name + "] Dimension Oscillator",
+                "&b[" + name + "] Oscillator",
                 "&7Adds a chance of mining from the targeted dimension!"
         );
     }
@@ -50,19 +53,24 @@ public class DimensionOscillator extends Oscillator {
             final double baseChance = ((1D / quarry.chance()) * this.chance);
             final int speed = quarry.speed();
             itemStacks.add(quarry.getItem());
+            itemStacks.add(new CustomItemStack(ARROW, " "));
             var entries = new ArrayList<>(this.pool.drops().toMap().entrySet());
             entries.sort(Comparator.comparingDouble(Map.Entry::getValue));
             for (Map.Entry<Material, Float> drop : entries) {
-                if (itemStacks.size() > 1) {
-                    itemStacks.add(null);
-                }
-
                 itemStacks.add(new CustomItemStack(new ItemStack(drop.getKey(), speed), meta -> {
                     final List<String> lore = new ArrayList<>();
                     lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(baseChance * drop.getValue())));
                     meta.setLore(lore);
                 }));
             }
+
+            // Add divider between quarrys
+            if (itemStacks.size() % 2 != 0) {
+                itemStacks.add(null);
+            }
+
+            itemStacks.add(null);
+            itemStacks.add(null);
         }
         return itemStacks;
     }
