@@ -1,6 +1,5 @@
 package io.github.mooy1.infinityexpansion.items.quarries;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -115,7 +114,7 @@ public final class Quarries {
                         Material itemType = Material.valueOf(oscillator.getString("item_type").toUpperCase(Locale.ROOT));
                         double chance = oscillator.getDouble("chance");
                         if (chance > 0) {
-                            new DimensionOscillator(dimension, pools.get(dimension), itemType, chance).register(addon);
+                            new DimensionOscillator(dimension, itemType, chance).register(addon);
                         } else {
                             addon.getLogger().info("Oscillator " + oscillatorType + "has 0 chance, skipping");
                         }

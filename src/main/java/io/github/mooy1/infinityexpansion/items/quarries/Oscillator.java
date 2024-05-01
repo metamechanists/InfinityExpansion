@@ -2,8 +2,6 @@ package io.github.mooy1.infinityexpansion.items.quarries;
 
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,7 +14,6 @@ import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
 
 import javax.annotation.Nonnull;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,7 +23,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Oscillator extends SlimefunItem implements RecipeDisplayItem {
     private static final Set<Oscillator> OSCILLATORS = new HashSet<>();
-    protected static final DecimalFormat FORMAT = new DecimalFormat("#.##%");
     public final double chance;
 
     protected Oscillator(ItemGroup group, SlimefunItemStack itemStack, RecipeType recipeType, ItemStack[] recipe, double chance) {
