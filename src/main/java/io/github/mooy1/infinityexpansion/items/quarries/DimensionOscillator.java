@@ -50,7 +50,7 @@ public class DimensionOscillator extends Oscillator {
     public List<ItemStack> getDisplayRecipes() {
         final List<ItemStack> itemStacks = new ArrayList<>();
         for (Quarry quarry : Quarry.getQuarries()) {
-            final double baseChance = ((1D / quarry.chance()) * this.chance);
+            final double baseChance = ((1D / this.pool.chanceOverride(quarry.chance())) * this.chance);
             final int speed = quarry.speed();
             itemStacks.add(quarry.getItem());
             itemStacks.add(new CustomItemStack(ARROW, " "));
