@@ -1,12 +1,14 @@
 package io.github.mooy1.infinityexpansion.items.quarries;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import lombok.experimental.UtilityClass;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,10 +19,8 @@ import io.github.mooy1.infinityexpansion.items.blocks.InfinityWorkbench;
 import io.github.mooy1.infinityexpansion.items.gear.Gear;
 import io.github.mooy1.infinityexpansion.items.materials.Materials;
 import io.github.mooy1.infinitylib.machines.MachineLore;
-import io.github.thebusybiscuit.slimefun4.api.MinecraftVersion;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 
 @UtilityClass
@@ -62,109 +62,77 @@ public final class Quarries {
             MachineLore.speed(64),
             MachineLore.energyPerSecond(36000)
     );
-    public static final double DIAMOND_CHANCE = getOscillatorChance("diamond");
-    public static final double REDSTONE_CHANCE = getOscillatorChance("redstone");
-    public static final double LAPIS_CHANCE = getOscillatorChance("lapis");
-    public static final double EMERALD_CHANCE = getOscillatorChance("emerald");
-    public static final double QUARTZ_CHANCE = getOscillatorChance("quartz");
-    public static final double GOLD_CHANCE = getOscillatorChance("gold");
-    public static final SlimefunItemStack DIAMOND_OSCILLATOR = Oscillator.create(Material.DIAMOND, DIAMOND_CHANCE);
-    public static final SlimefunItemStack REDSTONE_OSCILLATOR = Oscillator.create(Material.REDSTONE, REDSTONE_CHANCE);
-    public static final SlimefunItemStack LAPIS_OSCILLATOR = Oscillator.create(Material.LAPIS_LAZULI, LAPIS_CHANCE);
-    public static final SlimefunItemStack QUARTZ_OSCILLATOR = Oscillator.create(Material.QUARTZ, QUARTZ_CHANCE);
-    public static final SlimefunItemStack EMERALD_OSCILLATOR = Oscillator.create(Material.EMERALD, EMERALD_CHANCE);
-    public static final SlimefunItemStack GOLD_OSCILLATOR = Oscillator.create(Material.GOLD_INGOT, GOLD_CHANCE);
 
-    private static double getOscillatorChance(String type) {
-        return InfinityExpansion.config().getDouble("quarry-options.oscillators." + type, 0, 1);
-    }
+    public static void setup(InfinityExpansion addon) {
+        ConfigurationSection config = addon.getConfig().getConfigurationSection("quarry-options");
+        Objects.requireNonNull(config);
 
-    public static void setup(InfinityExpansion plugin) {
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection("quarry-options.resources");
-        Objects.requireNonNull(section);
-        List<Material> outputs = new ArrayList<>();
-
-        boolean coal = section.getBoolean("coal");
-
-        if (coal) {
-            outputs.add(Material.COAL);
-            outputs.add(Material.COAL);
+        Map<World.Environment, QuarryPool> pools = new HashMap<>();
+        ConfigurationSection poolsConfig = config.getConfigurationSection("oscillators");
+        if (poolsConfig != null) {
+            for (String poolType : poolsConfig.getKeys(false)) {
+                poolType = poolType.toUpperCase(Locale.ROOT).replace("OVERWORLD", "NORMAL");
+                try {
+                    World.Environment dimension = World.Environment.valueOf(poolType);
+                    ConfigurationSection pool = poolsConfig.getConfigurationSection(poolType);
+                    if (pool != null) {
+                        pools.put(dimension, QuarryPool.load(pool));
+                    }
+                } catch (Exception ignored) {
+                    addon.getLogger().warning("Invalid Quarry Pool: " + poolType + ", skipping");
+                }
+            }
         }
 
-        if (section.getBoolean("iron")) {
-            outputs.add(Material.IRON_INGOT);
+        ConfigurationSection oscillators = config.getConfigurationSection("oscillators");
+        if (oscillators != null) {
+            for (String oscillator : oscillators.getKeys(false)) {
+                oscillator = oscillator.toUpperCase(Locale.ROOT);
+                Material resource = Material.getMaterial(oscillator);
+                double chance = oscillators.getDouble(oscillator);
+                if (resource != null && chance > 0) {
+                    new Oscillator(resource, chance).register(addon);
+                }
+            }
         }
 
-        if (section.getBoolean("gold")) {
-            new Oscillator(GOLD_OSCILLATOR, GOLD_CHANCE).register(plugin);
-            outputs.add(Material.GOLD_INGOT);
-        }
-
-        if (Slimefun.getMinecraftVersion().isAtLeast(MinecraftVersion.MINECRAFT_1_17) && section.getBoolean("copper")) {
-            outputs.add(Material.COPPER_INGOT);
-            outputs.add(Material.COPPER_INGOT);
-        }
-
-        if (section.getBoolean("redstone")) {
-            new Oscillator(REDSTONE_OSCILLATOR, REDSTONE_CHANCE).register(plugin);
-            outputs.add(Material.REDSTONE);
-        }
-
-        if (section.getBoolean("lapis")) {
-            new Oscillator(LAPIS_OSCILLATOR, LAPIS_CHANCE).register(plugin);
-            outputs.add(Material.LAPIS_LAZULI);
-        }
-
-        if (section.getBoolean("emerald")) {
-            new Oscillator(EMERALD_OSCILLATOR, EMERALD_CHANCE).register(plugin);
-            outputs.add(Material.EMERALD);
-        }
-
-        if (section.getBoolean("diamond")) {
-            new Oscillator(DIAMOND_OSCILLATOR, DIAMOND_CHANCE).register(plugin);
-            outputs.add(Material.DIAMOND);
+        ConfigurationSection dimensionOscillators = config.getConfigurationSection("dimension_oscillators");
+        if (dimensionOscillators != null) {
+            for (String oscillatorType : dimensionOscillators.getKeys(false)) {
+                ConfigurationSection oscillator = dimensionOscillators.getConfigurationSection(oscillatorType);
+                if (oscillator != null) {
+                    oscillatorType = oscillatorType.toUpperCase(Locale.ROOT).replace("OVERWORLD", "NORMAL");
+                    try {
+                        World.Environment dimension = World.Environment.valueOf(oscillatorType);
+                        Material display = Material.valueOf(oscillator.getString("item_type"));
+                        double chance = oscillator.getDouble("chance");
+                        if (chance > 0) {
+                            new DimensionOscillator(dimension, pools.get(dimension), display, chance).register(addon);
+                        }
+                    } catch (Exception ignored) {
+                        addon.getLogger().warning("Invalid Dimensional Oscillator: " + oscillatorType + ", skipping");
+                    }
+                }
+            }
         }
 
         new Quarry(Groups.ADVANCED_MACHINES, BASIC_QUARRY, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 Materials.MAGSTEEL_PLATE, SlimefunItems.CARBONADO_EDGED_CAPACITOR, Materials.MAGSTEEL_PLATE,
                 new ItemStack(Material.IRON_PICKAXE), SlimefunItems.GEO_MINER, new ItemStack(Material.IRON_PICKAXE),
                 Materials.MACHINE_CIRCUIT, Materials.MACHINE_CORE, Materials.MACHINE_CIRCUIT
-        }, 1, 6, outputs.toArray(new Material[0])).energyPerTick(300).register(plugin);
-
-        if (section.getBoolean("quartz")) {
-            new Oscillator(QUARTZ_OSCILLATOR, QUARTZ_CHANCE).register(plugin);
-
-            outputs.add(Material.QUARTZ);
-        }
-
-        if (section.getBoolean("netherite")) {
-            outputs.add(Material.NETHERITE_INGOT);
-        }
-
-        if (section.getBoolean("netherrack")) {
-            outputs.add(Material.NETHERRACK);
-            outputs.add(Material.NETHERRACK);
-        }
+        }, 1, 6, pools).energyPerTick(300).register(addon);
 
         new Quarry(Groups.ADVANCED_MACHINES, ADVANCED_QUARRY, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 Materials.MACHINE_PLATE, SlimefunItems.ENERGIZED_CAPACITOR, Materials.MACHINE_PLATE,
                 new ItemStack(Material.DIAMOND_PICKAXE), BASIC_QUARRY, new ItemStack(Material.DIAMOND_PICKAXE),
                 Materials.MACHINE_CIRCUIT, Materials.MACHINE_CORE, Materials.MACHINE_CIRCUIT
-        }, 2, 4, outputs.toArray(new Material[0])).energyPerTick(900).register(plugin);
-
-        if (coal) {
-            outputs.add(Material.COAL);
-        }
+        }, 2, 4, pools).energyPerTick(900).register(addon);
 
         new Quarry(Groups.ADVANCED_MACHINES, VOID_QUARRY, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 Materials.VOID_INGOT, SlimefunExtension.VOID_CAPACITOR, Materials.VOID_INGOT,
                 new ItemStack(Material.NETHERITE_PICKAXE), ADVANCED_QUARRY, new ItemStack(Material.NETHERITE_PICKAXE),
                 Materials.MACHINE_CIRCUIT, Materials.MACHINE_CORE, Materials.MACHINE_CIRCUIT
-        }, 6, 2, outputs.toArray(new Material[0])).energyPerTick(3600).register(plugin);
-
-        if (coal) {
-            outputs.add(Material.COAL);
-        }
+        }, 6, 2, pools).energyPerTick(3600).register(addon);
 
         new Quarry(Groups.INFINITY_CHEAT, INFINITY_QUARRY, InfinityWorkbench.TYPE, new ItemStack[] {
                 null, Materials.MACHINE_PLATE, Materials.MACHINE_PLATE, Materials.MACHINE_PLATE, Materials.MACHINE_PLATE, null,
@@ -173,7 +141,7 @@ public final class Quarries {
                 Materials.VOID_INGOT, null, Materials.INFINITE_INGOT, Materials.INFINITE_INGOT, null, Materials.VOID_INGOT,
                 Materials.VOID_INGOT, null, Materials.INFINITE_INGOT, Materials.INFINITE_INGOT, null, Materials.VOID_INGOT,
                 Materials.VOID_INGOT, null, Materials.INFINITE_INGOT, Materials.INFINITE_INGOT, null, Materials.VOID_INGOT
-        }, 64, 1, outputs.toArray(new Material[0])).energyPerTick(36000).register(plugin);
+        }, 64, 1, pools).energyPerTick(36000).register(addon);
     }
 
 }

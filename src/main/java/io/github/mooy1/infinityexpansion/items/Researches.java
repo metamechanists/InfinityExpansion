@@ -1,5 +1,6 @@
 package io.github.mooy1.infinityexpansion.items;
 
+import io.github.mooy1.infinityexpansion.items.quarries.Oscillator;
 import lombok.experimental.UtilityClass;
 
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
@@ -11,8 +12,8 @@ import io.github.mooy1.infinityexpansion.items.materials.Materials;
 import io.github.mooy1.infinityexpansion.items.mobdata.MobData;
 import io.github.mooy1.infinityexpansion.items.quarries.Quarries;
 import io.github.mooy1.infinityexpansion.items.storage.Storage;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.researches.Research;
+import org.bukkit.inventory.ItemStack;
 
 @UtilityClass
 public final class Researches {
@@ -59,8 +60,7 @@ public final class Researches {
                 MobData.COW, MobData.SHEEP, MobData.CHICKEN
         );
         create(6, "oscillators", "Improving Quarries", 30,
-                Quarries.DIAMOND_OSCILLATOR, Quarries.EMERALD_OSCILLATOR, Quarries.LAPIS_OSCILLATOR,
-                Quarries.REDSTONE_OSCILLATOR, Quarries.QUARTZ_OSCILLATOR
+                Oscillator.getOscillators().stream().map(Oscillator::getItem).toArray(ItemStack[]::new)
         );
         create(7, "machine_materials", "Machine Materials", 20,
                 Materials.MAGSTEEL, Materials.MAGSTEEL_PLATE, Materials.MACHINE_CIRCUIT,
@@ -134,7 +134,7 @@ public final class Researches {
         );
     }
 
-    private static void create(int id, String key, String name, int cost, SlimefunItemStack... items) {
+    private static void create(int id, String key, String name, int cost, ItemStack... items) {
         new Research(InfinityExpansion.createKey(key), FIRST_RESEARCH_ID + id, name, cost).addItems(items).register();
     }
 

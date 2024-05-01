@@ -1,56 +1,81 @@
 package io.github.mooy1.infinityexpansion.items.quarries;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import io.github.mooy1.infinityexpansion.categories.Groups;
 import io.github.mooy1.infinityexpansion.items.materials.Materials;
-import io.github.mooy1.infinitylib.common.StackUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
 
-public final class Oscillator extends SlimefunItem {
+import javax.annotation.Nonnull;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
-    private static final Map<String, Oscillator> OSCILLATORS = new HashMap<>();
-
+public class Oscillator extends SlimefunItem implements RecipeDisplayItem {
+    private static final Set<Oscillator> OSCILLATORS = new HashSet<>();
+    protected static final DecimalFormat FORMAT = new DecimalFormat("#.##%");
     public final double chance;
 
-    @Nullable
-    public static Oscillator getOscillator(@Nullable ItemStack item) {
-        if (item == null) {
-            return null;
-        }
-        return OSCILLATORS.get(StackUtils.getId(item));
+    protected Oscillator(ItemGroup group, SlimefunItemStack itemStack, RecipeType recipeType, ItemStack[] recipe, double chance) {
+        super(group, itemStack, recipeType, recipe);
+        this.chance = chance;
+        OSCILLATORS.add(this);
     }
 
-    @Nonnull
-    public static SlimefunItemStack create(Material material, double chance) {
+    public Oscillator(Material resource, double chance) {
+        this(Groups.MAIN_MATERIALS, create(resource), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
+                Materials.MACHINE_PLATE, SlimefunItems.BLISTERING_INGOT_3, Materials.MACHINE_PLATE,
+                SlimefunItems.BLISTERING_INGOT_3, new ItemStack(resource), SlimefunItems.BLISTERING_INGOT_3,
+                Materials.MACHINE_PLATE, SlimefunItems.BLISTERING_INGOT_3, Materials.MACHINE_PLATE
+        }, chance);
+    }
+
+    private static SlimefunItemStack create(Material resource) {
         return new SlimefunItemStack(
-                "QUARRY_OSCILLATOR_" + material.name(),
-                material,
-                "&b" + ItemUtils.getItemName(new ItemStack(material)) + " Oscillator",
-                "&7Place in a quarry to give it",
-                "&7a " + (chance * 100) + "% chance of mining this material"
+                "QUARRY_OSCILLATOR_" + resource.name(),
+                resource,
+                "&b" + ItemUtils.getItemName(new ItemStack(resource)) + " Oscillator",
+                "&7Increases the odds of mining &b" + ItemUtils.getItemName(new ItemStack(resource))
         );
     }
 
-    public Oscillator(SlimefunItemStack item, double chance) {
-        super(Groups.MAIN_MATERIALS, item, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
-                Materials.MACHINE_PLATE, SlimefunItems.BLISTERING_INGOT_3, Materials.MACHINE_PLATE,
-                SlimefunItems.BLISTERING_INGOT_3, new ItemStack(item.getType()), SlimefunItems.BLISTERING_INGOT_3,
-                Materials.MACHINE_PLATE, SlimefunItems.BLISTERING_INGOT_3, Materials.MACHINE_PLATE
-        });
-        OSCILLATORS.put(getId(), this);
-        this.chance = chance;
+    @Override
+    public @Nonnull List<ItemStack> getDisplayRecipes() {
+        final List<ItemStack> recipes = new ArrayList<>();
+        for (Quarry quarry : Quarry.getQuarries()) {
+            final double chance = ((1D / quarry.getChance()) * this.chance) * 100;
+            final int speed = quarry.getSpeed();
+            recipes.add(quarry.getItem());
+            recipes.add(new CustomItemStack(new ItemStack(this.getItem().getType(), speed), meta -> {
+                final List<String> lore = new ArrayList<>();
+                lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(chance)));
+                meta.setLore(lore);
+            }));
+        }
+        return recipes;
     }
 
+    public Material output(QuarryPool pool, ThreadLocalRandom random) {
+        final Material output = this.getItem().getType();
+        return pool.commonDrop() != output && !pool.drops().contains(output)
+                ? pool.drops().getRandom(random)
+                : output;
+    }
+
+    public static Set<Oscillator> getOscillators() {
+        return Collections.unmodifiableSet(OSCILLATORS);
+    }
 }

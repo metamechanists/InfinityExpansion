@@ -24,37 +24,55 @@ mob-simulation-options:
   
 quarry-options:
 
-  # The chance (0 to 1) of an oscillator activating each time a material would be produced
+  # What items can be mined in the different dimensions
+  # The odds of the common drop are determined by the quarry
+  # the rest of the drops are defined as MATERIAL: WEIGHT
+  # you can add any materials you want, just make sure its what you want
+  pools:
+    overworld:
+      common_drop: cobblestone
+      drops:
+        coal: 4.0
+        copper_ingot: 2.0
+        iron_ingot: 1.0
+        gold_ingot: 1.0
+        redstone: 1.0
+        lapis_lazuli: 1.0
+        emerald: 1.0
+        diamond: 1.0
+
+    nether:
+      common_drop: netherrack
+      drops:
+        netherrack: 4.0
+        gold_ingot: 3.0
+        quartz: 2.0
+        netherite_ingot: 1.0
+
+    the_end:
+      common_drop: end_stone
+      drops:
+        end_stone: 3.0
+        obsidian: 1.0
+
+  # The chance (0 to 1) of an oscillator activating each time a material would be produced, set to 0 or remove to disable
+  # Any material in oscillators will have an oscillator created for it
   oscillators:
-    lapis: .5
-    diamond: .5
-    redstone: .5
-    quartz: .5
-    emerald: .5
-    gold: .5
+    lapis_lazuli: 0.5
+    diamond: 0.5
+    redstone: 0.5
+    quartz: 0.5
+    emerald: 0.5
+    gold_ingot: 0.5
+  # The chance (0 to 1) of an oscillator activating each time a material would be produced, set to 0 or remove to disable
+  # Any dimension listed will have an oscillator created for it
+  dimension_oscillators:
+    overworld: 0.5
+    nether: 0.5
+    the_end: 0.5
 
   # The number of slimefun ticks it takes to mine 1 block. 1 slimefun ticks = .6 seconds by default
   ticks-per-output: 10
-
-  # Allow quarries to mine quartz, netherite, netherrack in any world
-  output-nether-materials-in-overworld: false
-
-  # Enable/Disable resources from being produced
-  resources:
-
-    coal: true
-    iron: true
-    gold: true
-    lapis: true
-
-    # Vanilla Copper (1.17+)
-    copper: true
-    quartz: true
-    diamond: true
-    emerald: true
-    redstone: true
-    netherite: true
-    netherrack: true
   
 # These are the maximum level of enchants that can be obtained by combining 2 of the same enchant of the same level.
 advanced-anvil-max-levels:

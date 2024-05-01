@@ -4,14 +4,16 @@ import io.github.mooy1.infinityexpansion.InfinityExpansion;
 import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+import lombok.Getter;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
-import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -20,8 +22,13 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -31,11 +38,9 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 @ParametersAreNonnullByDefault
 public final class Quarry extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
-
-    private static final boolean ALLOW_NETHER_IN_OVERWORLD =
-            InfinityExpansion.config().getBoolean("quarry-options.output-nether-materials-in-overworld");
-    private static final int INTERVAL =
-            InfinityExpansion.config().getInt("quarry-options.ticks-per-output", 1, 100);
+    private static final Set<Quarry> QUARRIES = new HashSet<>();
+    private static final DecimalFormat FORMAT = new DecimalFormat("#.##%");
+    private static final int INTERVAL = InfinityExpansion.config().getInt("quarry-options.ticks-per-output", 1, 100);
     private static final ItemStack MINING = new CustomItemStack(Material.LIME_STAINED_GLASS_PANE, "&aMining...");
     private static final ItemStack OSCILLATOR_INFO = new CustomItemStack(
             Material.CYAN_STAINED_GLASS_PANE,
@@ -52,22 +57,20 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
     private static final int OSCILLATOR_SLOT = 49;
     private static final int STATUS_SLOT = 4;
 
+    @Getter
     private final int speed;
+    @Getter
     private final int chance;
-    private final Material[] outputs;
+    private final Map<World.Environment, QuarryPool> pools;
 
     public Quarry(ItemGroup category, SlimefunItemStack item, RecipeType type, ItemStack[] recipe,
-                  int speed, int chance, Material... outputs) {
+                  int speed, int chance, Map<World.Environment, QuarryPool> pools) {
         super(category, item, type, recipe);
 
         this.speed = speed;
         this.chance = chance;
-        this.outputs = outputs;
-    }
-
-    @Override
-    public int getEnergyConsumption() {
-        return this.energyPerTick;
+        this.pools = pools;
+        QUARRIES.add(this);
     }
 
     @Override
@@ -80,23 +83,21 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
     }
 
     @Override
-    protected int[] getInputSlots(DirtyChestMenu menu, ItemStack item) {
-        return new int[0];
+    public void onNewInstance(@Nonnull BlockMenu menu, @Nonnull Block b) {}
+
+    @Override
+    protected int getStatusSlot() {
+        return STATUS_SLOT;
     }
 
     @Override
     protected int[] getInputSlots() {
-        return new int[] { OSCILLATOR_SLOT };
+        return new int[0];
     }
 
     @Override
     protected int[] getOutputSlots() {
         return OUTPUT_SLOTS;
-    }
-
-    @Override
-    public void onNewInstance(@Nonnull BlockMenu menu, @Nonnull Block b) {
-
     }
 
     @Override
@@ -109,27 +110,16 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
             return true;
         }
 
-        ItemStack outputItem;
-
+        QuarryPool pool = this.pools.get(b.getWorld().getEnvironment());
+        ItemStack outputItem = new ItemStack(pool.commonDrop(), this.speed);
+        ThreadLocalRandom random = ThreadLocalRandom.current();
         if (ThreadLocalRandom.current().nextInt(this.chance) == 0) {
-            Oscillator oscillator = Oscillator.getOscillator(inv.getItemInSlot(OSCILLATOR_SLOT));
-            if (oscillator == null || ThreadLocalRandom.current().nextDouble() >= oscillator.chance) {
-                Material outputType = this.outputs[ThreadLocalRandom.current().nextInt(this.outputs.length)];
-                if (!ALLOW_NETHER_IN_OVERWORLD && b.getWorld().getEnvironment() != World.Environment.NETHER &&
-                        (outputType == Material.QUARTZ || outputType == Material.NETHERITE_INGOT || outputType == Material.NETHERRACK)
-                ) {
-                    outputItem = new ItemStack(Material.COBBLESTONE, this.speed);
-                }
-                else {
-                    outputItem = new ItemStack(outputType, this.speed);
-                }
+            final SlimefunItem sfItem = SlimefunItem.getByItem(inv.getItemInSlot(OSCILLATOR_SLOT));
+            if (sfItem instanceof Oscillator oscillator && random.nextDouble() >= oscillator.chance) {
+                outputItem = new ItemStack(oscillator.output(pool, random), this.speed);
+            } else {
+                outputItem = new ItemStack(pool.drops().getRandom(random), this.speed);
             }
-            else {
-                outputItem = new ItemStack(oscillator.getItem().getType(), this.speed);
-            }
-        }
-        else {
-            outputItem = new ItemStack(Material.COBBLESTONE, this.speed);
         }
 
         inv.pushItem(outputItem, OUTPUT_SLOTS);
@@ -137,27 +127,37 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
     }
 
     @Override
-    protected int getStatusSlot() {
-        return STATUS_SLOT;
+    public int getEnergyConsumption() {
+        return this.energyPerTick;
     }
-
-    @Nonnull
     @Override
-    public List<ItemStack> getDisplayRecipes() {
-        List<ItemStack> items = new ArrayList<>();
-
-        items.add(new ItemStack(Material.COBBLESTONE, this.speed));
-        for (Material mat : this.outputs) {
-            items.add(new ItemStack(mat, this.speed));
-        }
-
-        return items;
-    }
-
-    @Nonnull
-    @Override
-    public String getRecipeSectionLabel(@Nonnull Player p) {
+    public @Nonnull String getRecipeSectionLabel(@Nonnull Player ignored) {
         return "&7Mines:";
     }
 
+    @Override
+    public @Nonnull List<ItemStack> getDisplayRecipes() {
+        List<ItemStack> itemStacks = new ArrayList<>();
+        for (World.Environment dimension : this.pools.keySet()) {
+            QuarryPool pool = this.pools.get(dimension);
+            addWithChance(itemStacks, new ItemStack(pool.commonDrop(), this.speed), this.chance - 1F / this.chance);
+            for (Map.Entry<Material, Float> drop : pool.drops().toMap().entrySet()) {
+                addWithChance(itemStacks, new ItemStack(drop.getKey(), this.speed), (1F / this.chance) * drop.getValue());
+            }
+        }
+
+        return itemStacks;
+    }
+
+    private void addWithChance(List<ItemStack> itemStacks, ItemStack itemStack, double chance) {
+        itemStacks.add(new CustomItemStack(itemStack, meta -> {
+            final List<String> lore = new ArrayList<>();
+            lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(chance * 100)));
+            meta.setLore(lore);
+        }));
+    }
+
+    public static Set<Quarry> getQuarries() {
+        return Collections.unmodifiableSet(QUARRIES);
+    }
 }

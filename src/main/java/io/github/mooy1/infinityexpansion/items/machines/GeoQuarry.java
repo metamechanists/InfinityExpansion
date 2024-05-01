@@ -188,7 +188,7 @@ public final class GeoQuarry extends AbstractMachineBlock implements RecipeDispl
             }
         }
 
-        availability.add(0, ChatColors.color(availability.isEmpty() ? "&cNot Harvestable" : "&eHarvestable In:"));
+        availability.add(0, ChatColors.color(availability.isEmpty() ? "&7Not Harvestable" : "&7Harvestable In:"));
 
         GEO_RESOURCE_AVAILABILITY.put(resource, availability);
     }
