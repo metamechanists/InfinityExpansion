@@ -22,10 +22,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DimensionOscillator extends Oscillator {
     protected final QuarryPool pool;
 
-    public DimensionOscillator(World.Environment dimension, QuarryPool pool, Material display, double chance) {
-        super(Groups.MAIN_MATERIALS, create(dimension, display), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
+    public DimensionOscillator(World.Environment dimension, QuarryPool pool, Material itemType, double chance) {
+        super(Groups.MAIN_MATERIALS, create(dimension, itemType), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 Materials.MACHINE_PLATE, SlimefunItems.BLISTERING_INGOT_3, Materials.MACHINE_PLATE,
-                SlimefunItems.BLISTERING_INGOT_3, new ItemStack(display), SlimefunItems.BLISTERING_INGOT_3,
+                SlimefunItems.BLISTERING_INGOT_3, new ItemStack(itemType), SlimefunItems.BLISTERING_INGOT_3,
                 Materials.MACHINE_PLATE, SlimefunItems.BLISTERING_INGOT_3, Materials.MACHINE_PLATE
         }, chance);
         this.pool = pool;

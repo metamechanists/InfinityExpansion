@@ -111,10 +111,12 @@ public final class Quarries {
                 if (oscillator != null) {
                     try {
                         World.Environment dimension = World.Environment.valueOf(oscillatorType.toUpperCase(Locale.ROOT).replace("OVERWORLD", "NORMAL"));
-                        Material display = Material.valueOf(oscillator.getString("item_type"));
+                        Material itemType = Material.valueOf(oscillator.getString("item_type").toUpperCase(Locale.ROOT));
                         double chance = oscillator.getDouble("chance");
                         if (chance > 0) {
-                            new DimensionOscillator(dimension, pools.get(dimension), display, chance).register(addon);
+                            new DimensionOscillator(dimension, pools.get(dimension), itemType, chance).register(addon);
+                        } else {
+                            addon.getLogger().info("Oscillator " + oscillatorType + "has 0 chance, skipping");
                         }
                     } catch (Exception ignored) {
                         addon.getLogger().warning("Invalid Dimensional Oscillator: " + oscillatorType + ", skipping");
