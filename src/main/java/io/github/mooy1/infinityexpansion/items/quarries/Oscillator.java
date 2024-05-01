@@ -48,7 +48,7 @@ public class Oscillator extends SlimefunItem implements RecipeDisplayItem {
                 "QUARRY_OSCILLATOR_" + resource.name(),
                 resource,
                 "&b" + ItemUtils.getItemName(new ItemStack(resource)) + " Oscillator",
-                "&7Increases the odds of mining &b" + ItemUtils.getItemName(new ItemStack(resource))
+                "&7Increases the odds of mining this resource!"
         );
     }
 

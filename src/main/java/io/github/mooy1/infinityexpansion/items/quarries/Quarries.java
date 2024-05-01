@@ -1,6 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.quarries;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -67,7 +68,7 @@ public final class Quarries {
         ConfigurationSection config = addon.getConfig().getConfigurationSection("quarry-options");
         Objects.requireNonNull(config);
 
-        Map<World.Environment, QuarryPool> pools = new HashMap<>();
+        Map<World.Environment, QuarryPool> pools = new LinkedHashMap<>();
         ConfigurationSection poolsConfig = config.getConfigurationSection("pools");
         if (poolsConfig != null) {
             for (String poolType : poolsConfig.getKeys(false)) {
@@ -121,6 +122,8 @@ public final class Quarries {
                     } catch (Exception ignored) {
                         addon.getLogger().warning("Invalid Dimensional Oscillator: " + oscillatorType + ", skipping");
                     }
+                } else {
+                    addon.getLogger().warning("Missing oscillator section for " + oscillatorType);
                 }
             }
         }
