@@ -25,10 +25,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -38,7 +36,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 @ParametersAreNonnullByDefault
 public final class Quarry extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
-    private static final Set<Quarry> QUARRIES = new HashSet<>();
+    private static final List<Quarry> QUARRIES = new ArrayList<>();
     private static final DecimalFormat FORMAT = new DecimalFormat("#.##%");
     private static final int INTERVAL = InfinityExpansion.config().getInt("quarry-options.ticks-per-output", 1, 100);
     private static final ItemStack MINING = new CustomItemStack(Material.LIME_STAINED_GLASS_PANE, "&aMining...");
@@ -157,7 +155,7 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
         }));
     }
 
-    public static Set<Quarry> getQuarries() {
-        return Collections.unmodifiableSet(QUARRIES);
+    public static List<Quarry> getQuarries() {
+        return Collections.unmodifiableList(QUARRIES);
     }
 }

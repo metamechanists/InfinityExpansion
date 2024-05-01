@@ -56,7 +56,7 @@ public class DimensionOscillator extends Oscillator {
 
                 recipes.add(new CustomItemStack(new ItemStack(drop.getKey(), speed), meta -> {
                     final List<String> lore = new ArrayList<>();
-                    lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(baseChance * drop.getValue() * 100)));
+                    lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(baseChance * drop.getValue())));
                     meta.setLore(lore);
                 }));
             }
