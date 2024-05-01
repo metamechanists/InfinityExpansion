@@ -43,16 +43,16 @@ quarry-options:
 
     nether:
       common_drop: netherrack
+      common_chance_override: 0.75
       drops:
-        netherrack: 0.4
         gold_ingot: 0.3
         quartz: 0.2
         netherite_ingot: 0.1
 
     the_end:
       common_drop: end_stone
+      common_chance_override: 0.75
       drops:
-        end_stone: 0.3
         obsidian: 0.1
 
   # The chance (0 to 1) of an oscillator activating each time a material would be produced, set to 0 or remove to disable

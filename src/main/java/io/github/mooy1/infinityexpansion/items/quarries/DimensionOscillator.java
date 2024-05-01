@@ -44,24 +44,24 @@ public class DimensionOscillator extends Oscillator {
     @Nonnull
     @Override
     public List<ItemStack> getDisplayRecipes() {
-        final List<ItemStack> recipes = new ArrayList<>();
+        final List<ItemStack> itemStacks = new ArrayList<>();
         for (Quarry quarry : Quarry.getQuarries()) {
             final double baseChance = ((1D / quarry.chance()) * this.chance);
             final int speed = quarry.speed();
-            recipes.add(quarry.getItem());
+            itemStacks.add(quarry.getItem());
             for (Map.Entry<Material, Float> drop : this.pool.drops().toMap().entrySet()) {
-                if (recipes.size() > 1) {
-                    recipes.add(new ItemStack(Material.AIR));
+                if (itemStacks.size() > 1) {
+                    itemStacks.add(null);
                 }
 
-                recipes.add(new CustomItemStack(new ItemStack(drop.getKey(), speed), meta -> {
+                itemStacks.add(new CustomItemStack(new ItemStack(drop.getKey(), speed), meta -> {
                     final List<String> lore = new ArrayList<>();
                     lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(baseChance * drop.getValue())));
                     meta.setLore(lore);
                 }));
             }
         }
-        return recipes;
+        return itemStacks;
     }
 
     @Override

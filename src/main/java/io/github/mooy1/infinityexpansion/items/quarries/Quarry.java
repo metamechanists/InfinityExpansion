@@ -10,6 +10,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import lombok.Getter;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -111,7 +112,7 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
         QuarryPool pool = this.pools.get(b.getWorld().getEnvironment());
         ItemStack outputItem = new ItemStack(pool.commonDrop(), this.speed);
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        if (ThreadLocalRandom.current().nextInt(this.chance) == 0) {
+        if (ThreadLocalRandom.current().nextInt(pool.chanceOverride(this.chance)) == 0) {
             final SlimefunItem sfItem = SlimefunItem.getByItem(inv.getItemInSlot(OSCILLATOR_SLOT));
             if (sfItem instanceof Oscillator oscillator && random.nextDouble() >= oscillator.chance) {
                 outputItem = new ItemStack(oscillator.output(pool, random), this.speed);
@@ -138,19 +139,30 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
         List<ItemStack> itemStacks = new ArrayList<>();
         for (World.Environment dimension : this.pools.keySet()) {
             QuarryPool pool = this.pools.get(dimension);
-            addWithChance(itemStacks, new ItemStack(pool.commonDrop(), this.speed), this.chance - 1F / this.chance);
+            int baseChance = pool.chanceOverride(this.chance);
+            addWithChance(itemStacks, new ItemStack(pool.commonDrop(), this.speed), dimension, baseChance - 1F / baseChance);
             for (Map.Entry<Material, Float> drop : pool.drops().toMap().entrySet()) {
-                addWithChance(itemStacks, new ItemStack(drop.getKey(), this.speed), (1F / this.chance) * drop.getValue());
+                addWithChance(itemStacks, new ItemStack(drop.getKey(), this.speed), dimension, (1F / baseChance) * drop.getValue());
             }
+
+            // Add divider between dimensions
+            if (itemStacks.size() % 2 != 0) {
+                itemStacks.add(null);
+            }
+
+            itemStacks.add(null);
+            itemStacks.add(null);
         }
 
         return itemStacks;
     }
 
-    private void addWithChance(List<ItemStack> itemStacks, ItemStack itemStack, double chance) {
+    private void addWithChance(List<ItemStack> itemStacks, ItemStack itemStack, World.Environment dimension, double chance) {
         itemStacks.add(new CustomItemStack(itemStack, meta -> {
             final List<String> lore = new ArrayList<>();
-            lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(chance * 100)));
+            final String name = ChatUtils.humanize(dimension.name()).replace("Normal", "Overworld");
+            lore.add(ChatColors.color("&7Mined In: &b" + name));
+            lore.add(ChatColors.color("&7Chance: &b" + FORMAT.format(chance)));
             meta.setLore(lore);
         }));
     }

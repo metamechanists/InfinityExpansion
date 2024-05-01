@@ -7,15 +7,20 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Locale;
 
-public record QuarryPool(Material commonDrop, RandomizedSet<Material> drops) {
+public record QuarryPool(Material commonDrop, Integer chanceOverride, RandomizedSet<Material> drops) {
     public static QuarryPool load(ConfigurationSection section) {
         if (section == null) {
-            return new QuarryPool(Material.AIR, new RandomizedSet<>());
+            return new QuarryPool(Material.AIR, null, new RandomizedSet<>());
         }
 
         Material commonDrop = null;
         if (section.contains("common_drop")) {
             commonDrop = Material.getMaterial(section.getString("common_drop").toUpperCase(Locale.ROOT));
+        }
+
+        Integer chanceOverride = null;
+        if (section.contains("common_chance_override")) {
+            chanceOverride = (int) (1 / ((-1 * section.getDouble("common_chance_override")) + 1));
         }
 
         RandomizedSet<Material> drops = new RandomizedSet<>();
@@ -40,6 +45,10 @@ public record QuarryPool(Material commonDrop, RandomizedSet<Material> drops) {
         if (commonDrop == null) {
             commonDrop = Material.COBBLESTONE;
         }
-        return new QuarryPool(commonDrop, drops);
+        return new QuarryPool(commonDrop, chanceOverride, drops);
+    }
+
+    public int chanceOverride(int defaultChance) {
+        return this.chanceOverride != null ? this.chanceOverride : defaultChance;
     }
 }
