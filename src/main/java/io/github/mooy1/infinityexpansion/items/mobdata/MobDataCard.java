@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,7 +29,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 /**
  * A mob data card which will be able to be used in the {@link MobSimulationChamber}
  */
-@ParametersAreNonnullByDefault
+@ParametersAreNonnullByDefault @Getter
 public final class MobDataCard extends SlimefunItem implements RecipeDisplayItem, NotPlaceable {
     private static final DecimalFormat FORMAT = new DecimalFormat("#.######%");
     public static final Map<String, MobDataCard> CARDS = new HashMap<>();
@@ -56,8 +57,8 @@ public final class MobDataCard extends SlimefunItem implements RecipeDisplayItem
         CARDS.put(getId(), this);
     }
 
-    public final RandomizedSet<ItemStack> drops = new RandomizedSet<>();
-    public final MobDataTier tier;
+    final RandomizedSet<ItemStack> drops = new RandomizedSet<>();
+    final MobDataTier tier;
 
     public MobDataCard addDrop(ItemStack drop, float chance) {
         this.drops.add(drop, 1 / chance);

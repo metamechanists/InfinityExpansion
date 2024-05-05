@@ -1,7 +1,9 @@
 package io.github.mooy1.infinityexpansion.items.mobdata;
 
+import lombok.Getter;
 import org.bukkit.Material;
 
+@Getter
 public enum MobDataTier {
 
     // ex: chicken
@@ -31,5 +33,4 @@ public enum MobDataTier {
         this.energy = energy;
         this.material = material;
     }
-
 }

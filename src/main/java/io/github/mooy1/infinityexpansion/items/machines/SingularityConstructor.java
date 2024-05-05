@@ -2,6 +2,7 @@ package io.github.mooy1.infinityexpansion.items.machines;
 
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
 import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
+import io.github.mooy1.infinityexpansion.items.abstracts.SpeedScalable;
 import io.github.mooy1.infinityexpansion.utils.Util;
 import io.github.mooy1.infinitylib.common.StackUtils;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
@@ -34,7 +35,7 @@ import java.util.Map;
  *
  * @author Mooy1
  */
-public final class SingularityConstructor extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
+public final class SingularityConstructor extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer, SpeedScalable {
     @Getter
     private static final List<Recipe> RECIPE_LIST = new ArrayList<>();
     private static final Map<String, Pair<Integer, Recipe>> RECIPE_MAP = new HashMap<>();
@@ -62,6 +63,11 @@ public final class SingularityConstructor extends AbstractMachineBlock implement
 
     public SingularityConstructor(ItemGroup category, SlimefunItemStack item, RecipeType type, ItemStack[] recipe) {
         super(category, item, type, recipe);
+    }
+
+    @Override
+    public int getSpeed() {
+        return this.speed;
     }
 
     @Override

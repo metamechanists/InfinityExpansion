@@ -2,6 +2,7 @@ package io.github.mooy1.infinityexpansion.items.machines;
 
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
 import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
+import io.github.mooy1.infinityexpansion.items.abstracts.TimedMachine;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.geo.GEOResource;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @ParametersAreNonnullByDefault
-public final class GeoQuarry extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
+public final class GeoQuarry extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer, TimedMachine {
 
     private static final int STATUS = 4;
     private static final int[] OUTPUT_SLOTS = { 29, 30, 31, 32, 33, 38, 39, 40, 41, 42 };
@@ -55,6 +56,11 @@ public final class GeoQuarry extends AbstractMachineBlock implements RecipeDispl
     @Override
     public int getEnergyConsumption() {
         return this.energyPerTick;
+    }
+
+    @Override
+    public int getSfTicks() {
+        return this.ticksPerOutput;
     }
 
     @Override

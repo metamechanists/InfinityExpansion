@@ -67,7 +67,7 @@ public final class MobSimulationChamber extends TickingMenuBlock implements Ener
 
     @Override
     public int getEnergyConsumption() {
-        return 0;
+        return this.energy;
     }
 
     @Override

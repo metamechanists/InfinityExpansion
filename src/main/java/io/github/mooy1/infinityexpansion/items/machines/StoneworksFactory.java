@@ -11,6 +11,7 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -192,7 +193,7 @@ public final class StoneworksFactory extends AbstractMachineBlock implements Rec
         return STATUS_SLOT;
     }
 
-    @AllArgsConstructor
+    @AllArgsConstructor @Getter
     public enum Choice {
         NONE(new CustomItemStack(Material.BARRIER, "&cNone", "", "&7 > Click to cycle"),
                 new Material[0],
@@ -215,9 +216,9 @@ public final class StoneworksFactory extends AbstractMachineBlock implements Rec
                 new Material[] { Material.ANDESITE, Material.DIORITE, Material.GRANITE }
         );
 
-        public final ItemStack item;
-        public final Material[] inputs;
-        public final Material[] outputs;
+        final ItemStack item;
+        final Material[] inputs;
+        final Material[] outputs;
 
         private static final Choice[] values = values();
     }

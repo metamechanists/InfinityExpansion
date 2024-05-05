@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.github.mooy1.infinityexpansion.items.abstracts.TimedMachine;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -38,7 +39,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
  * @author Mooy1
  */
 @ParametersAreNonnullByDefault
-public final class StrainerBase extends TickingMenuBlock implements RecipeDisplayItem {
+public final class StrainerBase extends TickingMenuBlock implements RecipeDisplayItem, TimedMachine {
     public static final ItemStack POTATO = new CustomItemStack(Material.POTATO, "&7:&6Potatofish&7:", "&eLucky");
     private static final int STATUS_SLOT = 10;
     private static final int[] OUTPUT_SLOTS = {
@@ -75,6 +76,11 @@ public final class StrainerBase extends TickingMenuBlock implements RecipeDispla
     public StrainerBase(ItemGroup category, SlimefunItemStack item, RecipeType type, ItemStack[] recipe, int time) {
         super(category, item, type, recipe);
         this.time = time;
+    }
+
+    @Override
+    public int getSfTicks() {
+        return this.time;
     }
 
     @Override
