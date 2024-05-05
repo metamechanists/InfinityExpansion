@@ -31,7 +31,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 @ParametersAreNonnullByDefault
 public final class MobDataCard extends SlimefunItem implements RecipeDisplayItem, NotPlaceable {
     private static final DecimalFormat FORMAT = new DecimalFormat("#.######%");
-    static final Map<String, MobDataCard> CARDS = new HashMap<>();
+    public static final Map<String, MobDataCard> CARDS = new HashMap<>();
 
     public static SlimefunItemStack create(String name, MobDataTier tier) {
         return new SlimefunItemStack(
@@ -56,8 +56,8 @@ public final class MobDataCard extends SlimefunItem implements RecipeDisplayItem
         CARDS.put(getId(), this);
     }
 
-    final RandomizedSet<ItemStack> drops = new RandomizedSet<>();
-    final MobDataTier tier;
+    public final RandomizedSet<ItemStack> drops = new RandomizedSet<>();
+    public final MobDataTier tier;
 
     public MobDataCard addDrop(ItemStack drop, float chance) {
         this.drops.add(drop, 1 / chance);

@@ -11,7 +11,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -35,7 +35,7 @@ import java.util.Map;
  * @author Mooy1
  */
 public final class SingularityConstructor extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
-
+    @Getter
     private static final List<Recipe> RECIPE_LIST = new ArrayList<>();
     private static final Map<String, Pair<Integer, Recipe>> RECIPE_MAP = new HashMap<>();
     public static final RecipeType TYPE = new RecipeType(InfinityExpansion.createKey("singularity_constructor"),
@@ -280,14 +280,5 @@ public final class SingularityConstructor extends AbstractMachineBlock implement
         return items;
     }
 
-    @AllArgsConstructor
-    private static final class Recipe {
-
-        private final SlimefunItemStack output;
-        private final ItemStack input;
-        private final String id;
-        private final int amount;
-
-    }
-
+    public record Recipe(SlimefunItemStack output, ItemStack input, String id, int amount) {}
 }

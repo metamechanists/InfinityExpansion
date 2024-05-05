@@ -3,6 +3,7 @@ package io.github.mooy1.infinityexpansion.items.mobdata;
 import javax.annotation.Nonnull;
 
 import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
+import io.github.mooy1.infinityexpansion.items.abstracts.TimedMachine;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -27,7 +28,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
 
-public final class MobSimulationChamber extends TickingMenuBlock implements EnergyNetComponent, EnergyConsumer {
+public final class MobSimulationChamber extends TickingMenuBlock implements EnergyNetComponent, EnergyConsumer, TimedMachine {
 
     static final double XP_MULTIPLIER = InfinityExpansion.config().getDouble("mob-simulation-options.xp-multiplier", 0, 1000);
 
@@ -73,6 +74,11 @@ public final class MobSimulationChamber extends TickingMenuBlock implements Ener
     public int getEnergyConsumption(Block block) {
         MobDataCard card = getCard(block);
         return card == null ? 0 : card.tier.energy + this.energy;
+    }
+
+    @Override
+    public int getSfTicks() {
+        return this.interval;
     }
 
     @Override

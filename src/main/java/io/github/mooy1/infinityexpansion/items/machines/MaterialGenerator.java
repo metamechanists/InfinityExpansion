@@ -7,6 +7,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import lombok.Getter;
 import lombok.Setter;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -29,9 +30,9 @@ public final class MaterialGenerator extends AbstractMachineBlock implements Rec
     private static final int[] OUTPUT_SLOTS = { 13 };
     private static final int STATUS_SLOT = 4;
 
-    @Setter
+    @Setter @Getter
     private int speed;
-    @Setter
+    @Setter @Getter
     private Material material;
 
     public MaterialGenerator(ItemGroup category, SlimefunItemStack item, RecipeType type, ItemStack[] recipe) {

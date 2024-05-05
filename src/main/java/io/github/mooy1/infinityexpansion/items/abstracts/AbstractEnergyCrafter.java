@@ -18,7 +18,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
 
 @ParametersAreNonnullByDefault
-public abstract class AbstractEnergyCrafter extends TickingMenuBlock implements EnergyNetComponent {
+public abstract class AbstractEnergyCrafter extends TickingMenuBlock implements EnergyNetComponent, EnergyConsumer {
 
     protected final int energy;
     protected final int statusSlot;
@@ -27,6 +27,11 @@ public abstract class AbstractEnergyCrafter extends TickingMenuBlock implements 
         super(category, item, recipeType, recipe);
         this.energy = energy;
         this.statusSlot = statusSlot;
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return this.energy;
     }
 
     @Override

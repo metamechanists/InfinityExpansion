@@ -3,6 +3,7 @@ package io.github.mooy1.infinityexpansion.items.blocks;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,7 +24,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 
 @ParametersAreNonnullByDefault
-public final class InfinityWorkbench extends io.github.mooy1.infinitylib.machines.CraftingBlock implements EnergyNetComponent {
+public final class InfinityWorkbench extends io.github.mooy1.infinitylib.machines.CraftingBlock implements EnergyNetComponent, EnergyConsumer {
 
     public static final int[] INPUT_SLOTS = {
             0, 1, 2, 3, 4, 5,
@@ -100,8 +101,12 @@ public final class InfinityWorkbench extends io.github.mooy1.infinitylib.machine
     }
 
     @Override
-    public int getCapacity() {
+    public int getEnergyConsumption() {
         return this.energy;
     }
 
+    @Override
+    public int getCapacity() {
+        return this.energy;
+    }
 }

@@ -2,6 +2,8 @@ package io.github.mooy1.infinityexpansion.items.machines;
 
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
 import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
+import io.github.mooy1.infinityexpansion.items.abstracts.SpeedScalable;
+import io.github.mooy1.infinityexpansion.items.abstracts.TimedMachine;
 import io.github.mooy1.infinityexpansion.items.materials.Materials;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -26,7 +28,7 @@ import java.util.List;
  *
  * @author Mooy1
  */
-public final class VoidHarvester extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
+public final class VoidHarvester extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer, TimedMachine, SpeedScalable {
 
     public static final RecipeType TYPE = new RecipeType(InfinityExpansion.createKey("void_harvester"), Machines.VOID_HARVESTER);
 
@@ -43,6 +45,16 @@ public final class VoidHarvester extends AbstractMachineBlock implements RecipeD
     @Override
     public int getEnergyConsumption() {
         return this.energyPerTick;
+    }
+
+    @Override
+    public int getSfTicks() {
+        return TIME;
+    }
+
+    @Override
+    public int getSpeed() {
+        return this.speed;
     }
 
     @Override

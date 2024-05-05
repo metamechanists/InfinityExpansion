@@ -34,7 +34,7 @@ public final class GearTransformer extends AbstractEnergyCrafter implements Reci
     private static final int[] OUTPUT_SLOTS = { 40 };
     private static final int[] INPUT_SLOTS = { 10, 16 };
     private static final int STATUS_SLOT = 13;
-    private static final ItemStack[] TOOL_RECIPE = {
+    public static final ItemStack[] TOOL_RECIPE = {
             new ItemStack(Material.OAK_PLANKS, 4),
             new ItemStack(Material.COBBLESTONE, 4),
             new ItemStack(Material.IRON_INGOT, 4),
@@ -42,7 +42,7 @@ public final class GearTransformer extends AbstractEnergyCrafter implements Reci
             new ItemStack(Material.DIAMOND, 4),
             new ItemStack(Material.NETHERITE_INGOT, 2)
     };
-    private static final ItemStack[] ARMOR_RECIPE = {
+    public static final ItemStack[] ARMOR_RECIPE = {
             new ItemStack(Material.LEATHER, 9),
             new ItemStack(Material.CHAIN, 9),
             new ItemStack(Material.IRON_INGOT, 9),
@@ -50,20 +50,20 @@ public final class GearTransformer extends AbstractEnergyCrafter implements Reci
             new ItemStack(Material.DIAMOND, 9),
             new ItemStack(Material.NETHERITE_INGOT, 2)
     };
-    private static final String[] ARMOR_TYPES = {
+    public static final String[] ARMOR_TYPES = {
             "_HELMET",
             "_CHESTPLATE",
             "_LEGGINGS",
             "_BOOTS"
     };
-    private static final String[] TOOL_TYPES = {
+    public static final String[] TOOL_TYPES = {
             "_SWORD",
             "_PICKAXE",
             "_AXE",
             "_SHOVEL",
             "_HOE"
     };
-    private static final String[] TOOL_MATERIALS = {
+    public static final String[] TOOL_MATERIALS = {
             "WOODEN",
             "STONE",
             "IRON",
@@ -71,7 +71,7 @@ public final class GearTransformer extends AbstractEnergyCrafter implements Reci
             "DIAMOND",
             "NETHERITE"
     };
-    private static final String[] ARMOR_MATERIALS = {
+    public static final String[] ARMOR_MATERIALS = {
             "LEATHER",
             "CHAINMAIL",
             "IRON",

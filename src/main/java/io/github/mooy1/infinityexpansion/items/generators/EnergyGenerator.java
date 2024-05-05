@@ -1,6 +1,7 @@
 package io.github.mooy1.infinityexpansion.items.generators;
 
 import io.github.mooy1.infinityexpansion.items.abstracts.EnergyProducer;
+import io.github.mooy1.infinityexpansion.items.abstracts.TimedMachine;
 import io.github.mooy1.infinitylib.machines.MachineLore;
 import io.github.mooy1.infinitylib.machines.MenuBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -30,9 +31,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Thanks to panda for some stuff to work off of
  */
 @ParametersAreNonnullByDefault
-public final class EnergyGenerator extends MenuBlock implements EnergyNetProvider, EnergyProducer {
+public final class EnergyGenerator extends MenuBlock implements EnergyNetProvider, EnergyProducer, TimedMachine {
 
-    private final GenerationType type;
+    public final GenerationType type;
     private final int generation;
 
     public EnergyGenerator(ItemGroup category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe,
@@ -50,6 +51,11 @@ public final class EnergyGenerator extends MenuBlock implements EnergyNetProvide
     @Override
     public int getEnergyGenerated(Block block) {
         return this.type.generate(block.getWorld(), block, this.generation);
+    }
+
+    @Override
+    public int getSfTicks() {
+        return 1;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.github.mooy1.infinityexpansion.items.mobdata;
 
+import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
 import io.github.mooy1.infinitylib.machines.CraftingBlock;
 import io.github.mooy1.infinitylib.machines.MachineRecipeType;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -21,7 +22,7 @@ public final class MobDataInfuser extends CraftingBlock implements EnergyNetComp
 
     public static final MachineRecipeType TYPE = new MachineRecipeType("mob_data_infuser", MobData.INFUSER);
 
-    private final int energy;
+    public final int energy;
 
     public MobDataInfuser(ItemGroup category, SlimefunItemStack stack, RecipeType type, ItemStack[] recipe, int energy) {
         super(category, stack, type, recipe);

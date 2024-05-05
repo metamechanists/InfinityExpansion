@@ -2,12 +2,14 @@ package io.github.mooy1.infinityexpansion.items.machines;
 
 import io.github.mooy1.infinityexpansion.InfinityExpansion;
 import io.github.mooy1.infinityexpansion.items.abstracts.EnergyConsumer;
+import io.github.mooy1.infinityexpansion.items.abstracts.TimedMachine;
 import io.github.mooy1.infinitylib.machines.AbstractMachineBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import lombok.Getter;
 import lombok.Setter;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -21,7 +23,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public final class GrowingMachine extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer {
+public final class GrowingMachine extends AbstractMachineBlock implements RecipeDisplayItem, EnergyConsumer, TimedMachine {
 
     private static final int[] OUTPUT_SLOTS = {
             13, 14, 15, 16,
@@ -34,7 +36,7 @@ public final class GrowingMachine extends AbstractMachineBlock implements Recipe
     private static final ItemStack GROWING = new CustomItemStack(Material.LIME_STAINED_GLASS_PANE, "&aGrowing...");
     private static final ItemStack INPUT_PLANT = new CustomItemStack(Material.BLUE_STAINED_GLASS_PANE, "&9Input a plant!");
 
-    @Setter
+    @Setter @Getter
     private EnumMap<Material, ItemStack[]> recipes;
     @Setter
     private int ticksPerOutput;
@@ -46,6 +48,11 @@ public final class GrowingMachine extends AbstractMachineBlock implements Recipe
     @Override
     public int getEnergyConsumption() {
         return this.energyPerTick;
+    }
+
+    @Override
+    public int getSfTicks() {
+        return this.ticksPerOutput;
     }
 
     @Override

@@ -193,7 +193,7 @@ public final class StoneworksFactory extends AbstractMachineBlock implements Rec
     }
 
     @AllArgsConstructor
-    private enum Choice {
+    public enum Choice {
         NONE(new CustomItemStack(Material.BARRIER, "&cNone", "", "&7 > Click to cycle"),
                 new Material[0],
                 new Material[0]
@@ -215,9 +215,9 @@ public final class StoneworksFactory extends AbstractMachineBlock implements Rec
                 new Material[] { Material.ANDESITE, Material.DIORITE, Material.GRANITE }
         );
 
-        private final ItemStack item;
-        private final Material[] inputs;
-        private final Material[] outputs;
+        public final ItemStack item;
+        public final Material[] inputs;
+        public final Material[] outputs;
 
         private static final Choice[] values = values();
     }
