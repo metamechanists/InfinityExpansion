@@ -37,7 +37,7 @@ public class DimensionOscillator extends Oscillator {
     private static SlimefunItemStack create(World.Environment dimension, Material display) {
         final String name = ChatUtils.humanize(dimension.name()).replace("Normal", "Overworld");
         return new SlimefunItemStack(
-                "QUARRY_OSCILLATOR_" + name.toUpperCase(Locale.ROOT),
+                "QUARRY_OSCILLATOR_" + name.toUpperCase(Locale.ROOT).replace(' ', '_'),
                 display,
                 "&b[" + name + "] Oscillator",
                 "&7Adds a chance of mining from the targeted dimension!"
