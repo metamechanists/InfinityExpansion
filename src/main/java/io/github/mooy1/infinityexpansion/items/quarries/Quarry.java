@@ -93,7 +93,7 @@ public final class Quarry extends AbstractMachineBlock implements RecipeDisplayI
 
     @Override
     protected int[] getInputSlots() {
-        return new int[0];
+        return new int[] { OSCILLATOR_SLOT };
     }
 
     @Override
